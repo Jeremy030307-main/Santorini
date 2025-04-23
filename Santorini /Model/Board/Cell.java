@@ -39,17 +39,31 @@ public class Cell {
         tower.add(newBlock);
     };
 
+    public boolean canMoveTo(Cell otherCell){
+        return !otherCell.isOccupied() &&
+                !otherCell.isComplete() &&
+                otherCell.getPosition().z() <= getPosition().z() + 1;
+    }
+
+    public boolean canBuildOn(Cell otherCell){
+        return !otherCell.isOccupied() &&
+                !otherCell.isComplete();
+    }
+
     public boolean isComplete(){
         return tower.getLast().isDome();
     };
 
-    public void clearOccupant() {
-        this.occupant = null;
-    }
-
-    // Check if the cell is occupied by a worker
     public boolean isOccupied() {
         return occupant != null;
+    }
+
+    public void setOccupant(Worker occupant){
+        this.occupant = occupant;
+    }
+
+    public void clearOccupant() {
+        this.occupant = null;
     }
 
     public Position getPosition(){
@@ -58,9 +72,5 @@ public class Cell {
 
     public Worker getOccupant(){
         return  occupant;
-    }
-
-    public void setOccupant(Worker occupant){
-        this.occupant = occupant;
     }
 }
