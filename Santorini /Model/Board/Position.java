@@ -1,4 +1,4 @@
 package Model.Board;
 
-public record Position() {
+public record Position(int x, int y, int z) {
 }
