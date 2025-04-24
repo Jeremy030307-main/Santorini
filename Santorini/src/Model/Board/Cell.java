@@ -16,7 +16,7 @@ public class Cell {
     public Cell(int x, int y) {
         this.x = x;
         this.y = y;
-        this.tower = new ArrayList<Block>();
+        this.tower = new ArrayList<>();
         this.occupant = null;
     }
 
@@ -37,22 +37,37 @@ public class Cell {
         }
 
         tower.add(newBlock);
-    };
+    }
 
     public boolean canMoveTo(Cell otherCell){
-        return !otherCell.isOccupied() &&
+
+        Position currPos = getPosition();
+        Position otherPos = otherCell.getPosition();
+
+        return currPos.isAdjacent(otherPos) &&
+                !otherCell.isOccupied() &&
                 !otherCell.isComplete() &&
-                otherCell.getPosition().z() <= getPosition().z() + 1;
+                currPos.z() - otherPos.z() > -1;
     }
 
     public boolean canBuildOn(Cell otherCell){
-        return !otherCell.isOccupied() &&
+
+        Position currPos = getPosition();
+        Position otherPos = otherCell.getPosition();
+
+        return currPos.isAdjacent(otherPos) &&
+                !otherCell.isOccupied() &&
                 !otherCell.isComplete();
     }
 
     public boolean isComplete(){
+
+        if (tower.isEmpty()){
+            return false;
+        }
+
         return tower.getLast().isDome();
-    };
+    }
 
     public boolean isOccupied() {
         return occupant != null;
@@ -67,10 +82,17 @@ public class Cell {
     }
 
     public Position getPosition(){
-        return new Position(x ,y ,tower.getLast().getLevel());
-    };
+        int level = tower.isEmpty() ? 0 : tower.getLast().getLevel();
+
+        return new Position(x ,y ,level);
+    }
 
     public Worker getOccupant(){
         return  occupant;
+    }
+
+    @Override
+    public String toString() {
+        return getPosition().toString();
     }
 }

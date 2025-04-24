@@ -48,10 +48,9 @@ public class Board {
 
     public List<Cell> getSurroundingCell(Position pos) {
 
-        List<Cell> surroundingCells = new ArrayList<Cell>();
+        List<Cell> surroundingCells = new ArrayList<>();
         int cx = pos.x();
         int cy = pos.y();
-        int currLevel = pos.z();
 
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
@@ -73,4 +72,18 @@ public class Board {
     private boolean isInBounds(int x, int y) {
         return x >= 0 && x < SIZE && y >= 0 && y < SIZE;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Board:\n");
+        for (Cell[] cell : cells) {
+            for (Cell value : cell) {
+                sb.append(value).append(" ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
 }
