@@ -1,6 +1,6 @@
 package Model.GodCard;
 
-abstract class GodCard {
+public abstract class GodCard {
 
     protected  String name;
     protected String description;

@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         Board board = new Board();
 
-        List<Cell> movable = board.getBuildableCell(new Position(2,2,1));
+        List<Cell> movable = board.getBuildableCell(new Position(2,2));
         System.out.println(board);
         System.out.println(movable);
     }

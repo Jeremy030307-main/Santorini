@@ -73,7 +73,10 @@ public class Cell {
         return occupant != null;
     }
 
-    public void setOccupant(Worker occupant){
+    public void setOccupant(Worker occupant) {
+        if (this.occupant != null) {
+            throw new IllegalStateException("Cell is already occupied by Worker " + this.occupant.getId());
+        }
         this.occupant = occupant;
     }
 

@@ -28,6 +28,7 @@ public class Board {
         return cells[pos.x()][pos.y()];
     }
 
+    // this two might move to worker class
     public List<Cell> getMovableCell(Position currentPosition) {
 
         Cell currentCell = getCell(currentPosition);
@@ -37,6 +38,8 @@ public class Board {
                 .toList();
     }
 
+
+    // this might move to worker class
     public List<Cell> getBuildableCell(Position currentPosition) {
 
         Cell currentCell = getCell(currentPosition);
