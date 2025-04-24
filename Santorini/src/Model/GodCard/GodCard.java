@@ -19,7 +19,31 @@ abstract class GodCard {
     }
 
     public void onSetup(){
+    };
 
-    }
+    public void beforeMove(){
+    };
 
+    public void afterMove(){
+    };
+
+    public void beforeBuild() {
+    };
+
+    public void afterBuild() {}
+
+    public void beforeOpponentMove(){
+    };
+
+    public void afterOpponentMove(){
+    };
+
+    public void beforeOpponentBuild() {
+    };
+
+    public void afterOpponentBuild() {}
+
+    public void isWin(){}
+
+    public void isLose(){}
 }
