@@ -28,27 +28,6 @@ public class Board {
         return cells[pos.x()][pos.y()];
     }
 
-    // this two might move to worker class
-    public List<Cell> getMovableCell(Position currentPosition) {
-
-        Cell currentCell = getCell(currentPosition);
-
-        return getSurroundingCell(currentPosition).stream()
-                .filter(currentCell::canMoveTo)
-                .toList();
-    }
-
-
-    // this might move to worker class
-    public List<Cell> getBuildableCell(Position currentPosition) {
-
-        Cell currentCell = getCell(currentPosition);
-
-        return getSurroundingCell(currentPosition).stream()
-                .filter(currentCell::canBuildOn)
-                .toList();
-    }
-
     public List<Cell> getSurroundingCell(Position pos) {
 
         List<Cell> surroundingCells = new ArrayList<>();

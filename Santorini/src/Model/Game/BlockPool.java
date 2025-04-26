@@ -39,7 +39,7 @@ public class BlockPool {
         if (list == null || list.isEmpty()) {
             throw new IllegalStateException("No blocks of type " + type + " left.");
         }
-        return list.remove(list.size() - 1);
+        return list.removeLast();
     }
 
     public boolean hasBlock(BlockType type) {

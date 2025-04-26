@@ -39,25 +39,8 @@ public class Cell {
         tower.add(newBlock);
     }
 
-    public boolean canMoveTo(Cell otherCell){
-
-        Position currPos = getPosition();
-        Position otherPos = otherCell.getPosition();
-
-        return currPos.isAdjacent(otherPos) &&
-                !otherCell.isOccupied() &&
-                !otherCell.isComplete() &&
-                currPos.z() - otherPos.z() > -1;
-    }
-
-    public boolean canBuildOn(Cell otherCell){
-
-        Position currPos = getPosition();
-        Position otherPos = otherCell.getPosition();
-
-        return currPos.isAdjacent(otherPos) &&
-                !otherCell.isOccupied() &&
-                !otherCell.isComplete();
+    public boolean isAdjacentTo(Cell otherCell){
+        return getPosition().isAdjacent(otherCell.getPosition());
     }
 
     public boolean isComplete(){

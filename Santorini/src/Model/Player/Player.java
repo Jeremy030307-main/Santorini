@@ -1,13 +1,7 @@
 package Model.Player;
 
-import Model.Action.Action;
 import Model.Board.Cell;
-import Model.Game.Game;
-import Model.Game.GameState;
 import Model.GodCard.GodCard;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Player {
 
@@ -24,15 +18,20 @@ public class Player {
         this.workers[1] = new Worker(2, this);
     }
 
+    // TODO: Add un allowable action for player after gamestate finalise
 //    public List<Action> allowableAction(GameState gameState) {
 //
 //    }
+
+    public int getId() {
+        return id;
+    }
 
     public void placeWorker(int workerID, Cell cell){
         if (workerID < 0 || workerID > 1) {
             throw new IllegalArgumentException("Invalid worker index");
         }
-        workers[workerID].setPosition(cell);
+        workers[workerID].setLocatedCell(cell);
         cell.setOccupant(workers[workerID]);
     }
 
