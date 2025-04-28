@@ -51,7 +51,7 @@ public class Board {
         return surroundingCells;
     }
 
-    private boolean isInBounds(int x, int y) {
+    public boolean isInBounds(int x, int y) {
         return x >= 0 && x < SIZE && y >= 0 && y < SIZE;
     }
 

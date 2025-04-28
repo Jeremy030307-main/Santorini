@@ -46,6 +46,4 @@ public abstract class Action {
     public boolean isActive() {
         return active;
     }
-
-
 }
