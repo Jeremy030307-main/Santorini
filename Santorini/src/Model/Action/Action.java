@@ -1,5 +1,6 @@
 package Model.Action;
 
+import Model.Game.GameState;
 import Model.Game.TurnPhase;
 
 public abstract class Action {
@@ -15,7 +16,7 @@ public abstract class Action {
         this.nextPhase = nextPhase;
     }
 
-    public abstract void execute();
+    public abstract void execute(GameState gameState);
 
     // getter and setter
     public void activate() {
@@ -45,6 +46,4 @@ public abstract class Action {
     public boolean isActive() {
         return active;
     }
-
-
 }
