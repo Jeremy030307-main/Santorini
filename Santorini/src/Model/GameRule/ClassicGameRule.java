@@ -7,7 +7,6 @@ import Model.Game.Game;
 import Model.Game.GameState;
 import Model.Player.Player;
 import Model.Player.Worker;
-
 import java.util.List;
 
 public class ClassicGameRule {
@@ -42,13 +41,19 @@ public class ClassicGameRule {
         return null;
     }
 
-    public boolean isWin(GameState gameState){
-        //TODO: Implement the win logic for classic game rule
+    public boolean isWin(GameState gameState) {
+        for (Player player : gameState.getPlayers()) {
+            for (Worker worker : player.getWorkers()) {
+                if (worker.getLocatedCell().getPosition().z() == 3) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
-    public boolean isLose(GameState gameState){
-        // TODO: Implement the lose logic for the classic game rule
-        return false;
+    public boolean isLose(GameState gameState) {
+        Player currentPlayer = gameState.getTurnManager().getCurrentPlayer();
+        return getLegalActions(currentPlayer, gameState).isEmpty();
     }
 }
