@@ -39,25 +39,8 @@ public class Cell {
         tower.add(newBlock);
     }
 
-    public boolean canMoveTo(Cell otherCell){
-
-        Position currPos = getPosition();
-        Position otherPos = otherCell.getPosition();
-
-        return currPos.isAdjacent(otherPos) &&
-                !otherCell.isOccupied() &&
-                !otherCell.isComplete() &&
-                currPos.z() - otherPos.z() > -1;
-    }
-
-    public boolean canBuildOn(Cell otherCell){
-
-        Position currPos = getPosition();
-        Position otherPos = otherCell.getPosition();
-
-        return currPos.isAdjacent(otherPos) &&
-                !otherCell.isOccupied() &&
-                !otherCell.isComplete();
+    public boolean isAdjacentTo(Cell otherCell){
+        return getPosition().isAdjacent(otherCell.getPosition());
     }
 
     public boolean isComplete(){
@@ -73,7 +56,10 @@ public class Cell {
         return occupant != null;
     }
 
-    public void setOccupant(Worker occupant){
+    public void setOccupant(Worker occupant) {
+        if (this.occupant != null) {
+            throw new IllegalStateException("Cell is already occupied by Worker " + this.occupant.getId());
+        }
         this.occupant = occupant;
     }
 

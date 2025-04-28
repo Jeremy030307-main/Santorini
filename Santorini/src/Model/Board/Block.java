@@ -1,26 +1,32 @@
 package Model.Board;
 
-public class Block {
-    private final int level;
+import Model.Game.BlockPool;
 
-    public Block(int level) {
-        if (level < 1 || level > 4) {
-            throw new IllegalArgumentException("Block level must be between 1 and 4.");
+public class Block {
+
+    private final BlockType type;
+
+    public Block(BlockType type) {
+
+        if (type == null) {
+            throw new IllegalArgumentException("BlockType cannot be null");
         }
-        this.level = level;
+        this.type = type;
+    }
+
+    public BlockType getType() {
+        return type;
     }
 
     public int getLevel() {
-        return level;
+        return type.getLevel();
     }
 
     public boolean isDome() {
-        return level == 4;
+        return type.isDome();
     }
 
     public boolean canStack(Block topBlock) {
-        return !isDome() && topBlock.level == this.level + 1;
+        return !isDome() && topBlock.getType() == this.type.getNextLevel();
     }
 }
-/* TODO: Make a enum class for GUI display purpose instead of integer 1,2,3*/
-
