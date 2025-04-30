@@ -24,6 +24,18 @@ public class TurnManager {
         this.playerSelectedWorkerID = null;
     }
 
+    // === TESTING CONTROL METHODS ===
+
+    public void setCurrentPlayer(Player player) {
+        for (int i = 0; i < players.length; i++) {
+            if (players[i] == player) {
+                currentPlayerIndex = i;
+                return;
+            }
+        }
+    }
+
+
     public void playTurn(GameState gameState) {
 
         Player currentPlayer = players[currentPlayerIndex];
@@ -39,13 +51,14 @@ public class TurnManager {
                 onMove(gameState);
                 break;
             case BUILD:
-                onBuild();
+                onBuild(gameState);
                 break;
             case MOVE_OR_BUILD:
-                onMoveOrBuild();
+                onMoveOrBuild(gameState);
                 break;
             case OPTIONAL_ACTION:
-                onOptionalAction();
+                onOptionalAction(gameState);
+                break;
             case END_TURN:
                 onEndTurn();
                 gameState.process();  //FIXME: remove on production, this is just for testing
@@ -94,37 +107,91 @@ public class TurnManager {
     }
 
     private void onMove(GameState gameState) {
-
-        // retrieve the possible move action for the selected worker
         List<Action> moveActions = gameState.getMovesAction(getCurrentPlayer().getWorkerByID(playerSelectedWorkerID));
 
-        // Display the available move actions
         System.out.println("Available Move Actions:");
         for (int i = 0; i < moveActions.size(); i++) {
-            Action action = moveActions.get(i);
-            System.out.println((i + 1) + ": " + action);  // Display move options to the player
+            System.out.println((i + 1) + ": " + moveActions.get(i));  // Display move options to the player
         }
 
-        // TODO: selection of move actions
+        // Prompt the player to choose a move action
+        Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
 
-        this.phase = TurnPhase.BUILD;
+        // Validate input (check if the choice is within the range)
+        if (choice >= 1 && choice <= moveActions.size()) {
+            Action selectedAction = moveActions.get(choice - 1);
+            selectedAction.execute(gameState); // Now using the execute method from MoveAction
+            System.out.println("Move executed: " + selectedAction);
+            phase = selectedAction.getNextPhase(); // Move to the next phase based on the action
+        } else {
+            System.out.println("Invalid choice, please select a valid move action.");
+            onMove(gameState);  // Retry if input is invalid
+        }
     }
 
-    private void onBuild(){
+    private void onBuild(GameState gameState) {
         System.out.println("Build Stage");
 
-        // TODO: selection of build actions
-        this.phase = TurnPhase.END_TURN;
+        List<Action> buildActions = gameState.getBuildAction(getCurrentPlayer().getWorkerByID(playerSelectedWorkerID));
+
+        System.out.println("Available Build Actions:");
+        for (int i = 0; i < buildActions.size(); i++) {
+            System.out.println((i + 1) + ": " + buildActions.get(i));  // Display build options to the player
+        }
+
+        // Prompt the player to choose a build action
+        Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
+
+        // Validate input (check if the choice is within the range)
+        if (choice >= 1 && choice <= buildActions.size()) {
+            Action selectedAction = buildActions.get(choice - 1);
+            selectedAction.execute(gameState); // Execute the build action using its execute method
+            System.out.println("Build executed: " + selectedAction);
+            phase = selectedAction.getNextPhase(); // Move to the next phase based on the action
+        } else {
+            System.out.println("Invalid choice, please select a valid build action.");
+            onBuild(gameState);  // Retry if input is invalid
+        }
     }
 
-    private void onMoveOrBuild(){
+    private void onMoveOrBuild(GameState gameState) {
+        List<Action> moveActions = gameState.getMovesAction(getCurrentPlayer().getWorkerByID(playerSelectedWorkerID));
+        List<Action> buildActions = gameState.getBuildAction(getCurrentPlayer().getWorkerByID(playerSelectedWorkerID));
 
-        // TODO: same as onMove and onBuild, but this phase has both move and build action
+        System.out.println("Available Move Actions:");
+        for (int i = 0; i < moveActions.size(); i++) {
+            System.out.println((i + 1) + ": Move - " + moveActions.get(i));  // Display move options to the player
+        }
+
+        System.out.println("Available Build Actions:");
+        for (int i = 0; i < buildActions.size(); i++) {
+            System.out.println((i + 1 + moveActions.size()) + ": Build - " + buildActions.get(i));  // Display build options to the player
+        }
+
+        Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
+
+        if (choice >= 1 && choice <= moveActions.size()) {
+            Action selectedMoveAction = moveActions.get(choice - 1);
+            selectedMoveAction.execute(gameState); // Execute the selected move action
+            System.out.println("Move executed: " + selectedMoveAction);
+            phase = selectedMoveAction.getNextPhase(); // Move to the next phase based on the action
+        } else if (choice > moveActions.size() && choice <= (moveActions.size() + buildActions.size())) {
+            Action selectedBuildAction = buildActions.get(choice - 1 - moveActions.size());
+            selectedBuildAction.execute(gameState); // Execute the selected build action
+            System.out.println("Build executed: " + selectedBuildAction);
+            phase = selectedBuildAction.getNextPhase(); // Move to the next phase based on the action
+        } else {
+            System.out.println("Invalid choice, please select a valid action.");
+            onMoveOrBuild(gameState);  // Retry if input is invalid
+        }
     }
 
-    private void onOptionalAction(){
 
-        // TODO: implement after on phase 2 production where god card introduced
+    private void onOptionalAction(GameState gameState) {
+
     }
 
     private void onEndTurn(){

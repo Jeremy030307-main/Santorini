@@ -28,7 +28,7 @@ public class Main {
         Game game = new Game(board, players, gameRule, blockPool, turnManager, setupManager);
 
         game.start();
-
+        
 //        SwingUtilities.invokeLater(() -> {
 //            SantoriniFrame frame = new SantoriniFrame();
 //        });
