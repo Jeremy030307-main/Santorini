@@ -74,29 +74,17 @@ public class ClassicGameRule {
             }
         }
     
-        // 2. Check if opponent has no workers placed (both locatedCell == null)
-        boolean opponentHasWorkers = false;
-        for (Worker w : opponent.getWorkers()) {
-            if (w.getLocatedCell() != null) {
-                opponentHasWorkers = true;
-                break;
-            }
-        }
-        if (!opponentHasWorkers) {
-            return true;
-        }
-    
-        // 3. Check if all opponent workers have no valid move actions
-        boolean opponentCanMove = false;
-        for (Worker w : opponent.getWorkers()) {
-            if (w.getLocatedCell() != null && !gameState.getMovesAction(w).isEmpty()) {
-                opponentCanMove = true;
-                break;
-            }
-        }
-        if (!opponentCanMove) {
-            return true;
-        }
+        // // 2. Check if opponent has no workers placed (both locatedCell == null)
+        // boolean opponentHasWorkers = false;
+        // for (Worker w : opponent.getWorkers()) {
+        //     if (w.getLocatedCell() != null) {
+        //         opponentHasWorkers = true;
+        //         break;
+        //     }
+        // }
+        // if (!opponentHasWorkers) {
+        //     return true;
+        // }
     
         return false; // No win condition met
     }

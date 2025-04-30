@@ -38,14 +38,14 @@ public class GameRuleTest {
         // Build level 1 → 2 → 3 using correct block drawing method
         level3Cell.buildBlock(blockPool.takeBlock(BlockType.LEVEL1));
         level3Cell.buildBlock(blockPool.takeBlock(BlockType.LEVEL2));
-        level3Cell.buildBlock(blockPool.takeBlock(BlockType.LEVEL3));
+        // level3Cell.buildBlock(blockPool.takeBlock(BlockType.LEVEL3));
 
         // Set worker on the level 3 cell
         level3Cell.setOccupant(w1);
         w1.setLocatedCell(level3Cell);
 
         Position pos = w1.getLocatedCell().getPosition();
-        System.out.println("Worker w1 is at position: (" + pos.x() + ", " + pos.y() + ")");
+        System.out.println("Worker w1 is at position:"+ w1.getLocatedCell());
 
         // Set current player to Player 1
         turnManager.setCurrentPlayer(players[0]);
