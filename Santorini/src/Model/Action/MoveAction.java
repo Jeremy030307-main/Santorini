@@ -21,14 +21,13 @@ public class MoveAction extends Action {
     @Override
     public void execute(GameState gameState) {
 
-        // First: check weather worker can move from currCell to targetCell
-        if (!gameState.getGameRule().canMove(targetWorker, targetCell)) {
-            throw new IllegalStateException("Invalid move: cannot move from " +
-                    sourceCell.getPosition() + " to " + targetCell.getPosition());
-        }
-
         sourceCell.clearOccupant();
         targetCell.setOccupant(targetWorker);
         targetWorker.setLocatedCell(targetCell);
+    }
+
+    @Override
+    public String toString() {
+        return "Worker " + targetWorker.getId() + " (" + targetWorker.getOwner().getName() + ") move to" + targetCell.getPosition();
     }
 }

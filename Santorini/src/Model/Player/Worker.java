@@ -19,41 +19,6 @@ public class Worker {
         this.owner = owner;
     }
 
-    // TODO: Add in the allowable action for worker after finalise the gamestate
-//    public List<Action> allowableAction(GameState gameState) {
-//
-//    }
-
-    private List<Action> generateMoveAction(GameState gameState) {
-
-         List<Cell> movableCells = gameState.getBoard().getSurroundingCell(cell.getPosition()).stream()
-                                    .filter(targetCell -> gameState.getGameRule().canMove(this, targetCell))
-                                    .toList();
-
-         List<Action> actions = new ArrayList<>();
-
-         for (Cell movableCell : movableCells){
-             actions.add(new MoveAction(this, movableCell));
-         }
-
-         return actions;
-    }
-
-    private List<Action> generateBuildAction(GameState gameState) {
-
-        List<Cell> buildableCells = gameState.getBoard().getSurroundingCell(cell.getPosition()).stream()
-                .filter(targetCell -> gameState.getGameRule().canBuild(this, targetCell))
-                .toList();
-
-        List<Action> actions = new ArrayList<>();
-
-        for (Cell buildableCell : buildableCells){
-            actions.add(new BuildAction(this, buildableCell));
-        }
-
-        return actions;
-    }
-
     public int getId() {
         return id;
     }

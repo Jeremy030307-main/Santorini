@@ -1,7 +1,12 @@
 package Model.Player;
 
+import Model.Action.Action;
+import Model.Board.Board;
 import Model.Board.Cell;
+import Model.GameRule.ClassicGameRule;
 import Model.GodCard.GodCard;
+
+import java.util.List;
 
 public class Player {
 
@@ -10,29 +15,29 @@ public class Player {
     private final Worker[] workers = new Worker[2];
     private final GodCard godCard;
 
+    private boolean win;
+    private boolean lose;
+
     public Player(int id, String name, GodCard godCard) {
         this.id = id;
         this.name = name;
         this.godCard = godCard;
         this.workers[0] = new Worker(1, this);
         this.workers[1] = new Worker(2, this);
+        this.win = false;
+        this.lose = false;
     }
 
-    // TODO: Add un allowable action for player after gamestate finalise
-//    public List<Action> allowableAction(GameState gameState) {
-//
-//    }
+    public void placeWorker(Worker worker, Cell cell) {
+        worker.setLocatedCell(cell);
+        cell.setOccupant(worker);
+
+        // Print a message that the worker has been placed on the cell
+        System.out.println("Worker " + worker.getId() + " (" + name + ") has been placed on cell at position: (" + cell.getPosition() + ")");
+    }
 
     public int getId() {
         return id;
-    }
-
-    public void placeWorker(int workerID, Cell cell){
-        if (workerID < 0 || workerID > 1) {
-            throw new IllegalArgumentException("Invalid worker index");
-        }
-        workers[workerID].setLocatedCell(cell);
-        cell.setOccupant(workers[workerID]);
     }
 
     public String getName() {

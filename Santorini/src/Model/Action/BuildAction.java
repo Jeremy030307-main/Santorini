@@ -22,12 +22,6 @@ public class BuildAction extends Action{
     @Override
     public void execute(GameState gameState) {
 
-        // First: check weather worker can build from targetWorker position to targetCell
-        if (!gameState.getGameRule().canBuild(targetWorker, targetCell)) {
-            throw new IllegalStateException("Invalid move: cannot build from " +
-                    targetWorker.getLocatedCell() + " to " + targetCell.getPosition());
-        }
-
         // Compute the block level needed for this build
         BlockType blockLevel = BlockType.fromLevel(targetCell.getPosition().z() + 1);
 
@@ -36,5 +30,10 @@ public class BuildAction extends Action{
 
         // build the required block on the target cell
         targetCell.buildBlock(block);
+    }
+
+    @Override
+    public String toString() {
+        return "Worker " + targetWorker.getId() + " (" + targetWorker.getOwner().getName() + ") build on" + targetCell.getPosition();
     }
 }
