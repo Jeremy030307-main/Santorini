@@ -63,13 +63,58 @@ public class ClassicGameRule {
                 !targetCell.isComplete();
     }
 
-    public boolean isWin(GameState gameState){
-        //TODO: Implement the win logic for classic game rule
-        return false;
+    public boolean isWin(GameState gameState) {
+        Player currentPlayer = gameState.getTurnManager().getCurrentPlayer();
+        Player opponent = gameState.getTurnManager().getOpponent(currentPlayer);
+    
+        // 1. Check if any of current player's workers are standing on level 3
+        for (Worker worker : currentPlayer.getWorkers()) {
+            if (worker.getLocatedCell() != null && worker.getLocatedCell().getPosition().z() == 3) {
+                return true;  // classic win by reaching level 3
+            }
+        }
+    
+        // 2. Check if opponent has no workers placed (both locatedCell == null)
+        boolean opponentHasWorkers = false;
+        for (Worker w : opponent.getWorkers()) {
+            if (w.getLocatedCell() != null) {
+                opponentHasWorkers = true;
+                break;
+            }
+        }
+        if (!opponentHasWorkers) {
+            return true;
+        }
+    
+        // 3. Check if all opponent workers have no valid move actions
+        boolean opponentCanMove = false;
+        for (Worker w : opponent.getWorkers()) {
+            if (w.getLocatedCell() != null && !gameState.getMovesAction(w).isEmpty()) {
+                opponentCanMove = true;
+                break;
+            }
+        }
+        if (!opponentCanMove) {
+            return true;
+        }
+    
+        return false; // No win condition met
     }
 
     public boolean isLose(GameState gameState) {
         Player currentPlayer = gameState.getTurnManager().getCurrentPlayer();
-        return getLegalActions(currentPlayer, gameState).isEmpty();
+    
+        for (Worker worker : currentPlayer.getWorkers()) {
+            if (worker.getLocatedCell() != null) {
+                // If the worker can move OR build, player is not stuck
+                boolean canMove = !moveActions(gameState.getBoard(), worker).isEmpty();
+                boolean canBuild = !buildActions(gameState.getBoard(), worker).isEmpty();
+                if (canMove || canBuild) {
+                    return false; // Player still has options
+                }
+            }
+        }
+    
+        return true; // All workers are stuck, player loses
     }
 }
