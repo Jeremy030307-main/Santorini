@@ -1,44 +1,66 @@
-import Model.Board.*;
-import Model.Game.*;
+import Model.Board.Board;
+import Model.Board.Cell;
+import Model.Board.Position;
+import Model.Board.BlockType;
+import Model.Game.BlockPool;
+import Model.Game.Game;
+import Model.Game.GameState;
+import Model.Game.SetupManager;
+import Model.Game.TurnManager;
 import Model.GameRule.ClassicGameRule;
-import Model.Player.*;
+import Model.Player.Player;
+import Model.Player.Worker;
+
+import java.util.ArrayList;
 
 public class GameRuleTest {
     public static void main(String[] args) {
-        // Set up board
+        // Set up board and players with worker lists
         Board board = new Board();
-        Game game = new Game(); // if needed to initialize GameState
+        Player[] players = new Player[2];
+        players[0] = new Player(0, "Player 1", null);
+        players[1] = new Player(1, "Player 2", null);
 
-        // Set up players
-        Player player1 = new Player("Player 1");
-        Player player2 = new Player("Player 2");
+        // Create and assign workers
+        Worker w1 = new Worker(0, players[0]);
+        Worker w2 = new Worker(1, players[0]);
+        Worker w3 = new Worker(2, players[1]);
+        Worker w4 = new Worker(3, players[1]);
 
-        // Add workers
-        Worker w1 = new Worker("W1", player1);
-        Worker w2 = new Worker("W2", player2);
-        player1.setWorkers(w1);
-        player2.setWorkers(w2);
+        players[0].getWorkers().add(w1);
+        players[0].getWorkers().add(w2);
+        players[1].getWorkers().add(w3);
+        players[1].getWorkers().add(w4);
 
-        // Place workers on board
-        Cell cellW1 = board.getCell(1, 1);
-        cellW1.buildBlock(new Block(1));
-        cellW1.buildBlock(new Block(2));
-        cellW1.buildBlock(new Block(3)); // Level 3
-        cellW1.setOccupant(w1);
-        w1.setLocatedCell(cellW1);
+        // Setup game
+        ClassicGameRule gameRule = new ClassicGameRule();
+        BlockPool blockPool = new BlockPool();
+        TurnManager turnManager = new TurnManager(players);
+        SetupManager setupManager = new SetupManager(players, board);
+        Game game = new Game(board, players, gameRule, blockPool, turnManager, setupManager);
+        GameState gameState = game.getGameState();
 
-        Cell cellW2 = board.getCell(2, 2);
-        cellW2.setOccupant(w2);
-        w2.setLocatedCell(cellW2);
+        // === TEST: Win by reaching Level 3 ===
+        Cell level3Cell = board.getCell(new Position(2, 2));
 
-        // Set up game state
-        TurnManager turnManager = new TurnManager(player1, player2);
-        GameState gameState = new GameState(board, turnManager);
+        // Build level 1 → 2 → 3 using correct block drawing method
+        level3Cell.buildBlock(blockPool.takeBlock(BlockType.LEVEL1));
+        level3Cell.buildBlock(blockPool.takeBlock(BlockType.LEVEL2));
+        level3Cell.buildBlock(blockPool.takeBlock(BlockType.LEVEL3));
 
-        // Use your rule
-        ClassicGameRule rule = new ClassicGameRule();
+        // Set worker on the level 3 cell
+        level3Cell.setOccupant(w1);
+        w1.setLocatedCell(level3Cell);
 
-        System.out.println("isWin: " + rule.isWin(gameState));   // Expected: true (Player 1 stands on level 3)
-        System.out.println("isLose: " + rule.isLose(gameState)); // Expected: false (Player 1 still has moves)
+        // Set current player to Player 1
+        turnManager.setCurrentPlayer(players[0]);
+
+        // Check win and lose conditions
+        boolean win = gameRule.isWin(gameState);
+        boolean lose = gameRule.isLose(gameState);
+
+        System.out.println("=== TEST: Worker on Level 3 ===");
+        System.out.println("Expected: WIN = true, LOSE = false");
+        System.out.println("Actual:   WIN = " + win + ", LOSE = " + lose);
     }
 }
