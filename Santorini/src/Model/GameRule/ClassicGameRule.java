@@ -74,17 +74,17 @@ public class ClassicGameRule {
             }
         }
     
-        // // 2. Check if opponent has no workers placed (both locatedCell == null)
-        // boolean opponentHasWorkers = false;
-        // for (Worker w : opponent.getWorkers()) {
-        //     if (w.getLocatedCell() != null) {
-        //         opponentHasWorkers = true;
-        //         break;
-        //     }
-        // }
-        // if (!opponentHasWorkers) {
-        //     return true;
-        // }
+        // 2. Check if opponent has any workers placed on the board
+        boolean opponentHasWorkers = false;
+        for (Worker w : opponent.getWorkers()) {
+            if (w.getLocatedCell() != null) {
+                opponentHasWorkers = true;
+                break; // The opponent has at least one worker placed on the board
+            }
+        }
+        if (!opponentHasWorkers) {
+            return true;  // Win condition met: the opponent has no workers placed on the board
+        }
     
         return false; // No win condition met
     }
