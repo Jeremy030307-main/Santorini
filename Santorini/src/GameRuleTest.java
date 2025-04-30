@@ -63,5 +63,6 @@ public class GameRuleTest {
         System.out.println("=== TEST: No remaining workers for Player 1 ===");
         System.out.println("Expected: WIN = true, LOSE = true (Player 1 has no workers on the board)");
         System.out.println("Actual:   WIN = " + win + ", LOSE = " + lose);
+        
     }
 }
