@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class SidePanel extends JPanel {
     public SidePanel() {
-        setOpaque(false);
+//        setOpaque(false);
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 

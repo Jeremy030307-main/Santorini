@@ -15,23 +15,33 @@ public class SantoriniFrame extends JFrame {
     public SantoriniFrame() {
         setTitle("Santorini");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Center on screen
 
         // Setup CardLayout
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
         // Add the different views (screens)
-        cardPanel.add(new MainGamePanel(this), GAME_VIEW);
-//        cardPanel.add(new SettingsPanel(this), SETTINGS_VIEW);
+        MainGamePanel mainGamePanel = new MainGamePanel();
+        cardPanel.add(mainGamePanel, GAME_VIEW);
 
         // Show Home first
         cardLayout.show(cardPanel, GAME_VIEW);
 
         setContentPane(cardPanel);
-        setVisible(true);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
 
+        // Now make the frame's content pane exactly fit the panel's preferred size
+        pack(); // important: makes insets available
+        Insets insets = getInsets();
+
+        Dimension preferredSize = mainGamePanel.getPreferredSize(); // e.g., 1728 x 971
+        int frameWidth = preferredSize.width + insets.left + insets.right;
+        int frameHeight = preferredSize.height + insets.top + insets.bottom;
+
+        // Now explicitly set frame size to fit content
+        setSize(frameWidth, frameHeight);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setVisible(true);
     }
 
     // Method to switch views

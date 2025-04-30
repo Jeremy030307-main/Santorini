@@ -1,50 +1,46 @@
 package View.Game;
 
-import View.SantoriniFrame;
+import View.BackgroundPanel;
+import View.SantoriniPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class MainGamePanel extends JPanel {
+public class MainGamePanel extends SantoriniPanel {
 
-    private Image backgroundImage;
+    private static final String imgPath = "GameBoard.png";
 
-    public MainGamePanel(SantoriniFrame frame) {
-        setLayout(new BorderLayout());
+    public MainGamePanel() {
+        super(imgPath);
 
-        backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("../../Asset/sea_background.jpg"))).getImage();
-
-        // Top: Turn Info
-        add(new TopPanel(), BorderLayout.NORTH);
-
-        // Center: Board (centered with GridBagLayout)
-        JPanel boardPanelWrapper = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        // Set the constraints to center the BoardPanel
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.CENTER; // Centers the component in both directions
-        boardPanelWrapper.add(new BoardPanel(), gbc);
-
-        // Make sure the wrapper is transparent
-        boardPanelWrapper.setOpaque(false);
-
-        // Add to center of BorderLayout
-        add(boardPanelWrapper, BorderLayout.CENTER);
-
-        // East: Player info and God Cards
-        add(new SidePanel(), BorderLayout.WEST);
-
-        // South: Bottom Buttons
-        add(new BottomPanel(), BorderLayout.SOUTH);
+        createMap();
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+    private void createMap(){
+        JBoard board = new JBoard();
+        int boardSize = (int)(getScaleWidth() * 0.681); // or whatever fits your grid
+        board.setPreferredSize(new Dimension(boardSize, boardSize));
+        board.setOpaque(false); // So background image shows through
+
+        GridBagConstraints mapCon = new GridBagConstraints();
+        mapCon.gridx = 1;
+        mapCon.gridy = 0;
+        mapCon.gridwidth = 1;
+        mapCon.gridheight = 2;
+        mapCon.weightx = 0.075;
+        mapCon.weighty = 1;
+        mapCon.fill = GridBagConstraints.BOTH;
+        mapCon.anchor = GridBagConstraints.CENTER;
+
+        int top = (int) ((70.0 / getScaleHeight()) * getMaxHeight());
+        int left = (int) ((311.0 / getScaleWidth()) * getMaxWidth());
+        int bottom = (int) ((84.0 / getScaleHeight()) * getMaxHeight());
+        int right = (int) ((306.0 / getScaleWidth()) * getMaxWidth());
+        System.out.println(top + " " + left + " " + bottom + " " + right);
+        mapCon.insets = new Insets(top, left, bottom, right);
+
+        add(board, mapCon);
     }
 }
 
