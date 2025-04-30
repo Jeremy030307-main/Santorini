@@ -22,15 +22,10 @@ public class GameRuleTest {
         players[1] = new Player(1, "Player 2", null);
 
         // Create and assign workers
-        Worker w1 = new Worker(0, players[0]);
-        Worker w2 = new Worker(1, players[0]);
-        Worker w3 = new Worker(2, players[1]);
-        Worker w4 = new Worker(3, players[1]);
-
-        players[0].getWorkers().add(w1);
-        players[0].getWorkers().add(w2);
-        players[1].getWorkers().add(w3);
-        players[1].getWorkers().add(w4);
+        Worker w1 = players[0].getWorkers()[0];
+        Worker w2 = players[0].getWorkers()[1];
+        Worker w3 = players[1].getWorkers()[0];
+        Worker w4 = players[1].getWorkers()[1];
 
         // Setup game
         ClassicGameRule gameRule = new ClassicGameRule();

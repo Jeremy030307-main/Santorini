@@ -24,6 +24,18 @@ public class TurnManager {
         this.playerSelectedWorkerID = null;
     }
 
+    // === TESTING CONTROL METHODS ===
+
+    public void setCurrentPlayer(Player player) {
+        for (int i = 0; i < players.length; i++) {
+            if (players[i] == player) {
+                currentPlayerIndex = i;
+                return;
+            }
+        }
+    }
+
+
     public void playTurn(GameState gameState) {
 
         Player currentPlayer = players[currentPlayerIndex];
