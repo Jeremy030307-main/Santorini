@@ -23,9 +23,6 @@ public class GameRuleTest {
 
         // Create and assign workers
         Worker w1 = players[0].getWorkers()[0];
-        Worker w2 = players[0].getWorkers()[1];
-        Worker w3 = players[1].getWorkers()[0];
-        Worker w4 = players[1].getWorkers()[1];
 
         // Setup game
         ClassicGameRule gameRule = new ClassicGameRule();
@@ -47,6 +44,9 @@ public class GameRuleTest {
         level3Cell.setOccupant(w1);
         w1.setLocatedCell(level3Cell);
 
+        Position pos = w1.getLocatedCell().getPosition();
+        System.out.println("Worker w1 is at position: (" + pos.x() + ", " + pos.y() + ")");
+
         // Set current player to Player 1
         turnManager.setCurrentPlayer(players[0]);
 
@@ -54,7 +54,7 @@ public class GameRuleTest {
         boolean win = gameRule.isWin(gameState);
         boolean lose = gameRule.isLose(gameState);
 
-        System.out.println("=== TEST: Worker on Level 3 ===");
+        System.out.println("=== TEST: Worker on Level 2 ===");
         System.out.println("Expected: WIN = true, LOSE = false");
         System.out.println("Actual:   WIN = " + win + ", LOSE = " + lose);
     }
