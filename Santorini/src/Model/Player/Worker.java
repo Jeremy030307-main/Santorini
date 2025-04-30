@@ -4,9 +4,7 @@ import Model.Action.Action;
 import Model.Action.BuildAction;
 import Model.Action.MoveAction;
 import Model.Board.Cell;
-import Model.Board.Position;
 import Model.Game.GameState;
-
 import java.util.ArrayList;
 import java.util.List;
 
