@@ -68,8 +68,8 @@ public class ClassicGameRule {
         return false;
     }
 
-    public boolean isLose(GameState gameState){
-        // TODO: Implement the lose logic for the classic game rule
-        return false;
+    public boolean isLose(GameState gameState) {
+        Player currentPlayer = gameState.getTurnManager().getCurrentPlayer();
+        return getLegalActions(currentPlayer, gameState).isEmpty();
     }
 }
