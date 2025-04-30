@@ -1,6 +1,7 @@
 package Model.GameRule;
 
 import Model.Action.Action;
+import Model.Action.BuildAction;
 import Model.Action.MoveAction;
 import Model.Board.Board;
 import Model.Board.Cell;
@@ -40,7 +41,7 @@ public class ClassicGameRule {
         List<Action> actions = new ArrayList<>();
 
         for (Cell movableCell : movableCells){
-            actions.add(new MoveAction(worker, movableCell));
+            actions.add(new BuildAction(worker, movableCell));
         }
 
         return actions;
