@@ -1,5 +1,8 @@
 package Model.GodCard;
 
+import Model.Action.Action;
+import java.util.List;
+
 public abstract class GodCard {
 
     protected  String name;
@@ -21,16 +24,18 @@ public abstract class GodCard {
     public void onSetup(){
     };
 
-    public void beforeMove(){
+    public List<Action> beforeMove(List<Action> moveActions){
+        return moveActions;
     };
 
     public void afterMove(){
     };
 
-    public void beforeBuild() {
+    public List<Action> beforeBuild(List<Action> buildActions) {
+        return buildActions;
     };
 
-    public void afterBuild() {}
+    public void afterBuild() {};
 
     public void beforeOpponentMove(){
     };

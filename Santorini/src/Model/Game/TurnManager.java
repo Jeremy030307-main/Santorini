@@ -2,7 +2,6 @@ package Model.Game;
 
 import Model.Action.Action;
 import Model.Player.Player;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,11 +36,16 @@ public class TurnManager {
 
     public List<Action> getMoveActions(GameState gameState){
         List<Action> moveActions = gameState.getMovesAction(getCurrentPlayer().getWorkerByID(playerSelectedWorkerID));
+
+        moveActions = getCurrentPlayer().getGodCard().beforeMove(moveActions);
+;        
         return moveActions;
     };
 
     public List<Action> getBuildActions(GameState gameState){
         List<Action> buildActions = gameState.getBuildAction(getCurrentPlayer().getWorkerByID(playerSelectedWorkerID));
+
+        buildActions = getCurrentPlayer().getGodCard().beforeBuild(buildActions);
         return buildActions;
     };
 
