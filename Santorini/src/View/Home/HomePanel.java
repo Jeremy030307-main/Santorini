@@ -6,6 +6,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
+/**
+ * The {@code HomePanel} class represents the home screen panel in the Santorini game.
+ * It extends {@link SantoriniPanel} and contains the layout and functionality for the home screen,
+ * including the "Play" and "Load" buttons.
+ * <p>
+ * This class handles the creation and positioning of the buttons, as well as the functionality
+ * for user interactions such as starting a new game or loading a saved game.
+ * </p>
+ */
 public class HomePanel extends SantoriniPanel {
 
     private static final String imgPath = "intro.png";
@@ -13,6 +22,11 @@ public class HomePanel extends SantoriniPanel {
     private JButton playButton;
     private JButton loadButton;
 
+    /**
+     * Constructs a new {@code HomePanel} instance.
+     * Initializes the home screen with a background image and sets the layout.
+     * This constructor also creates the "Play" and "Load" buttons and places them on the panel.
+     */
     public HomePanel() {
         super(imgPath);
         setLayout(new GridBagLayout());
@@ -21,6 +35,10 @@ public class HomePanel extends SantoriniPanel {
         createLoadButton();
     }
 
+    /**
+     * Creates and configures the "Play" button on the home screen.
+     * The button is associated with an icon and positioned on the panel using {@link GridBagLayout}.
+     */
     private void createPlayButton(){
         GridBagConstraints c = new GridBagConstraints();
 
@@ -45,6 +63,10 @@ public class HomePanel extends SantoriniPanel {
         add(playButton, c);
     }
 
+    /**
+     * Creates and configures the "Load" button on the home screen.
+     * The button is associated with an icon and positioned on the panel using {@link GridBagLayout}.
+     */
     private void createLoadButton(){
         GridBagConstraints c = new GridBagConstraints();
 
@@ -69,10 +91,20 @@ public class HomePanel extends SantoriniPanel {
         add(loadButton, c);
     }
 
+    /**
+     * Retrieves the "Play" button.
+     *
+     * @return The {@link JButton} representing the "Play" button
+     */
     public JButton getPlayButton() {
         return playButton;
     }
 
+    /**
+     * Retrieves the "Load" button.
+     *
+     * @return The {@link JButton} representing the "Load" button
+     */
     public JButton getLoadButton() {
         return loadButton;
     }
