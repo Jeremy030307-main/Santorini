@@ -5,7 +5,6 @@ import Model.Board.Board;
 import Model.GameRule.ClassicGameRule;
 import Model.Player.Player;
 import Model.Player.Worker;
-
 import java.util.List;
 
 public class GameState {
@@ -40,7 +39,7 @@ public class GameState {
     public void process(){
         if (gameRule.checkWin(this)){
             gameOver = true;
-        };
+        }
 
         gameRule.checkLose(this);
     }
