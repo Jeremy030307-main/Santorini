@@ -1,9 +1,9 @@
 package Controller;
 
+import Controller.GameFlow.GameController;
 import Model.Board.Cell;
 import Model.Board.Position;
 import Model.Game.SetupManager;
-import Model.Player.Player;
 import Model.Player.Worker;
 import View.Game.GamePanel;
 import View.Game.MapComponent.JBoard;
@@ -11,12 +11,10 @@ import View.Game.MapComponent.JCell;
 import View.Game.MapComponent.JCellAction;
 import View.Game.MapComponent.JWorker;
 
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class SetupController {
@@ -33,7 +31,20 @@ public class SetupController {
     }
 
     public void setup(){
+
+        if (setupManager.isSetupComplete()) {
+            gameController.startGame();
+            return;
+        }
+
+        gameController.setCurrentPlayerIndex(setupManager.getCurrentPlayer().getId());
+        gameController.updateGamePanel(gameController.getGame().getGameState(), SetupManager.ADD_WORKER_TEXT);
+        updateUIForCurrentPhase();
+    }
+
+    private void updateUIForCurrentPhase(){
         JBoard boardDisplay = gamePanel.getGameBoard();
+        gameController.setCurrentPlayerIndex(setupManager.getCurrentPlayer().getId());
 
         for  (Cell cell : setupManager.getUnoccupiedCells()) {
             Position pos = cell.getPosition();
@@ -45,26 +56,11 @@ public class SetupController {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     placeWorker(pos);
+                    clearListeners();
+                    setup();
                 }
             });
         }
-    }
-
-    private void onSetupComplete(){
-
-        for (Map.Entry<JCell, MouseListener> entry : attachedListeners.entrySet()) {
-            JCell cell = entry.getKey();
-            MouseListener listener = entry.getValue();
-
-            cell.removeMouseListener(listener);
-            cell.clearAction();
-        }
-        attachedListeners.clear();  // Important to clear the map after removal
-
-        // update the board view
-        gamePanel.getGameBoard().update();
-
-        gameController.startGame();
     }
 
     public void placeWorker(Position pos){
@@ -77,10 +73,6 @@ public class SetupController {
         // post action after setting the worker
         cellDisplay.clearAction();
         removeListener(cellDisplay);
-
-        if (setupManager.isSetupComplete()) {
-            onSetupComplete();
-        }
     }
 
     private void addListener(JCell cellDisplay,  MouseListener listener){
@@ -91,6 +83,20 @@ public class SetupController {
     private void removeListener(JCell cellDisplay){
         MouseListener listener = attachedListeners.remove(cellDisplay);
         cellDisplay.removeMouseListener(listener);
+    }
+
+    private void clearListeners(){
+        for (Map.Entry<JCell, MouseListener> entry : attachedListeners.entrySet()) {
+            JCell cell = entry.getKey();
+            MouseListener listener = entry.getValue();
+
+            cell.removeMouseListener(listener);
+            cell.clearAction();
+        }
+        attachedListeners.clear();  // Important to clear the map after removal
+
+        // update the board view
+        gamePanel.getGameBoard().update();
     }
 
 }

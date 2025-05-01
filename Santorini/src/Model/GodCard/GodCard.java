@@ -5,16 +5,16 @@ import java.util.List;
 
 public abstract class GodCard {
 
-    protected  String name;
+    protected GodCardFactory godName;
     protected String description;
 
-    public GodCard(String name, String description) {
-        this.name = name;
+    public GodCard(GodCardFactory godName, String description) {
+        this.godName = godName;
         this.description = description;
     }
 
-    public String getName() {
-        return name;
+    public GodCardFactory getName() {
+        return godName;
     }
 
     public String getDescription() {

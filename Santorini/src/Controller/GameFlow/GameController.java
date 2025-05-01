@@ -1,18 +1,18 @@
-package Controller;
+package Controller.GameFlow;
 
+import Controller.HomeController;
+import Controller.SetupController;
 import Model.Board.Block;
 import Model.Board.Board;
 import Model.Board.Cell;
 import Model.Game.*;
 import Model.GameRule.ClassicGameRule;
 import Model.Player.Player;
-import Model.Player.Worker;
 import Model.Player.WorkerColor;
 import View.Game.GamePanel;
 import View.Game.MapComponent.*;
 import View.SantoriniFrame;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,22 +26,15 @@ public class GameController {
 
     private final SetupController setupController;
     private final TurnController turnController;
+    private final GameOverController gameOverController;
 
-    public GameController(SantoriniFrame santoriniFrame) {
+    private int currentPlayerIndex;
 
-        Board board = new Board();
-        Player[] players = new Player[2];
-        players[0] = new Player(0, "Player 1", null, WorkerColor.ORANGE);
-        players[1] = new Player(1, "Player 2", null, WorkerColor.RED);
-        ClassicGameRule gameRule = new ClassicGameRule();
-        BlockPool blockPool = new BlockPool();
-        TurnManager turnManager = new TurnManager(players);
-        SetupManager setupManager = new SetupManager(players, board);
+    public GameController(SantoriniFrame santoriniFrame, Game game) {
 
-        this.game = new Game(board, players, gameRule, blockPool, turnManager, setupManager);
-
+        this.game = game;
         List<JPlayer> displayPlayers = new ArrayList<>();
-        for (Player player : players) {
+        for (Player player : game.getGameState().getPlayers()) {
             displayPlayers.add(JPlayer.from(player.getWorkerColor().toString()));
         }
 
@@ -50,27 +43,27 @@ public class GameController {
 
         this.setupController = new SetupController(this.game.getGameState().getSetupManager(), this.gamePanel, this);
         this.turnController = new TurnController(this.game.getGameState().getTurnManager(), this.gamePanel, this);
+        this.gameOverController = new GameOverController(this.mainFrame);
         initGame();
     }
 
     public void setupGame(){
 
-        System.out.println("Run Setup");
+        mainFrame.showView(GAME_VIEW);
         setupController.setup();
         return;
     }
 
     public void startGame(){
-        System.out.println("Run turn");
         turnController.processTurn(game.getGameState());
         return;
     }
 
     public void gameOver(){
-
+        gameOverController.showWinPanel();
     }
 
-    public void updateGamePanel(GameState gameState) {
+    public void updateGamePanel(GameState gameState, String actionLabelText) {
 
         Cell[][] cells = gameState.getBoard().getCells(); // assuming 'board' is a Board instance
 
@@ -90,15 +83,27 @@ public class GameController {
             }
         }
 
+        gamePanel.setActivePlayerID(currentPlayerIndex, actionLabelText);
         gamePanel.getGameBoard().update();
+        gamePanel.validate();
+        gamePanel.repaint();
     }
 
     private void initGame() {
         mainFrame.addView(gamePanel, GAME_VIEW);
+        gamePanel.getQuitButton().addActionListener(e -> mainFrame.showView(HomeController.HOME_VIEW));
     }
 
     public Game getGame() {
         return game;
+    }
+
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
+    }
+
+    public void setCurrentPlayerIndex(int currentPlayerIndex) {
+        this.currentPlayerIndex = currentPlayerIndex;
     }
 }
 

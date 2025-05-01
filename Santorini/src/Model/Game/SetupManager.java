@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 public class SetupManager {
 
+    public final static String ADD_WORKER_TEXT = "Add A Worker";
     private final Player[] players;
     private final Board board;
 
@@ -21,57 +22,6 @@ public class SetupManager {
         this.players = players;
         this.board = board;
     }
-
-    public void setup(){
-//        placeWorkers();
-    }
-
-//    private void placeWorkers() {
-//
-//        for (Player player : players) {
-//            System.out.println("Setting up workers for " + player.getName());
-//
-//            for(Worker worker : player.getWorkers()){
-//                boolean placed = false;
-//
-//                while (!placed) {
-//                    System.out.println("Place worker " + (worker.getId()) +
-//                            " for " + player.getName() +
-//                            " (format: x y)");
-//
-//                    try {
-//                        String input = scanner.nextLine();
-//                        String[] parts = input.split(" ");
-//
-//                        if (parts.length != 2) {
-//                            System.out.println("Invalid input format. Please enter two numbers.");
-//                            continue;
-//                        }
-//
-//                        int x = Integer.parseInt(parts[0]);
-//                        int y = Integer.parseInt(parts[1]);
-//
-//                        if (!board.isInBounds(x, y)) {
-//                            System.out.println("Invalid position. Out of bounds");
-//                            continue;
-//                        }
-//
-//                        if (board.getCell(new Position(x, y)).isOccupied()) {
-//                            System.out.println("Invalid position. The cell is occupied.");
-//                            continue;
-//                        }
-//
-//                        Cell targetCell = board.getCell(new Position(x, y));
-//                        player.placeWorker(worker, targetCell);
-//                        placed = true;
-//
-//                    } catch (NumberFormatException e) {
-//                        System.out.println("Please enter numbers only.");
-//                    }
-//                }
-//            }
-//        }
-//    }
 
     public List<Cell> getUnoccupiedCells() {
         return board.getUnoccupiedCells();

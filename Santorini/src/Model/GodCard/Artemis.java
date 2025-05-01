@@ -12,7 +12,7 @@ public class Artemis extends GodCard {
     private boolean extraMoveUsed;
 
     public Artemis() {
-        super("Artemis", "Your Worker may move one additional time, but not back to its initial space.");
+        super(GodCardFactory.ARTEMIS, "Your Worker may move one additional time, but not back to its initial space.");
         this.extraMoveUsed = false;
     }
 

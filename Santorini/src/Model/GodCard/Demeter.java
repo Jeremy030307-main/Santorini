@@ -12,7 +12,7 @@ public class Demeter extends GodCard {
     private boolean extraBuildUsed;
 
     public Demeter() {
-        super("Demeter", "Your Worker may build one additional time, but not on the same space.");
+        super(GodCardFactory.DEMETER, "Your Worker may build one additional time, but not on the same space.");
         this.extraBuildUsed = false;
     }
 

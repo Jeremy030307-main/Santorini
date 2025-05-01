@@ -14,7 +14,7 @@ public class Player {
     private final int id;
     private final String name;
     private final Worker[] workers = new Worker[2];
-    private final GodCard godCard;
+    private GodCard godCard;
     private final WorkerColor workerColor;
 
     private boolean win;
@@ -67,5 +67,13 @@ public class Player {
 
     public WorkerColor getWorkerColor() {
         return workerColor;
+    }
+
+    public void setWin(boolean win) {
+        this.win = win;
+    }
+
+    public void setGodCard(GodCard godCard) {
+        this.godCard = godCard;
     }
 }

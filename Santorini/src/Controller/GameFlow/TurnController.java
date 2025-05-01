@@ -1,7 +1,6 @@
-package Controller;
+package Controller.GameFlow;
 
 import Model.Action.Action;
-import Model.Board.Cell;
 import Model.Board.Position;
 import Model.Game.GameState;
 import Model.Game.TurnManager;
@@ -37,6 +36,8 @@ public class TurnController {
             return;
         }
 
+        gameController.setCurrentPlayerIndex(turnManager.getCurrentPlayer().getId());
+        gameController.updateGamePanel(gameController.getGame().getGameState(), turnManager.getPhase().getPhaseText());
         updateUIForCurrentPhase(gameState);
     }
 
@@ -82,7 +83,6 @@ public class TurnController {
                 public void mouseClicked(MouseEvent e) {
                     turnManager.handleWorkerSelection(worker.getId());
                     clearListeners();
-                    gameController.updateGamePanel(gameState);
                     processTurn(gameState);
                 }
             });
@@ -101,7 +101,6 @@ public class TurnController {
                 public void mouseClicked(MouseEvent e) {
                     turnManager.handleAction(action, gameState);
                     clearListeners();
-                    gameController.updateGamePanel(gameState);
                     processTurn(gameState);
                 }
             });
