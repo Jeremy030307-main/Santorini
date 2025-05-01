@@ -6,6 +6,7 @@ import Model.Board.Cell;
 import Model.GameRule.ClassicGameRule;
 import Model.GodCard.GodCard;
 
+import java.awt.*;
 import java.util.List;
 
 public class Player {
@@ -14,16 +15,19 @@ public class Player {
     private final String name;
     private final Worker[] workers = new Worker[2];
     private final GodCard godCard;
+    private final WorkerColor workerColor;
 
     private boolean win;
     private boolean lose;
 
-    public Player(int id, String name, GodCard godCard) {
+
+    public Player(int id, String name, GodCard godCard, WorkerColor workerColor) {
         this.id = id;
         this.name = name;
         this.godCard = godCard;
-        this.workers[0] = new Worker(1, this);
-        this.workers[1] = new Worker(2, this);
+        this.workerColor = workerColor;
+        this.workers[0] = new Worker(1, this, WorkerType.MALE, workerColor);
+        this.workers[1] = new Worker(2, this, WorkerType.FEMALE, workerColor);
         this.win = false;
         this.lose = false;
     }
@@ -59,5 +63,9 @@ public class Player {
 
     public GodCard getGodCard() {
         return godCard;
+    }
+
+    public WorkerColor getWorkerColor() {
+        return workerColor;
     }
 }

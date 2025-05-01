@@ -7,15 +7,11 @@ import Model.Player.Worker;
 
 public class MoveAction extends Action {
 
-    private final Worker targetWorker;
-    private final Cell targetCell;
     private final Cell sourceCell;
 
     public MoveAction(Worker targetWorker, Cell targetCell) {
-        super("move", TurnPhase.MOVE, TurnPhase.BUILD);
-        this.targetWorker = targetWorker;
+        super("move", TurnPhase.MOVE, TurnPhase.BUILD, targetWorker, targetCell);
         this.sourceCell = targetWorker.getLocatedCell();
-        this.targetCell = targetCell;
     }
 
     @Override
