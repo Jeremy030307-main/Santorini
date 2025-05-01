@@ -1,41 +1,57 @@
 package View;
 
-import View.Game.MainGamePanel;
+import Controller.HomeController;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class SantoriniFrame extends JFrame {
+
+    private static SantoriniFrame instance;
     private CardLayout cardLayout;
     private JPanel cardPanel;
 
-    public static final String GAME_VIEW = "GameView";
-    public static final String SETTINGS_VIEW = "SettingsView";
-
-    public SantoriniFrame() {
+    private SantoriniFrame() {
         setTitle("Santorini");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Center on screen
 
         // Setup CardLayout
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
-        // Add the different views (screens)
-        cardPanel.add(new MainGamePanel(this), GAME_VIEW);
-//        cardPanel.add(new SettingsPanel(this), SETTINGS_VIEW);
-
-        // Show Home first
-        cardLayout.show(cardPanel, GAME_VIEW);
+        HomeController homeController = new HomeController(this);
+        showView(HomeController.HOME_VIEW);
 
         setContentPane(cardPanel);
-        setVisible(true);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
 
+        pack();
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setVisible(true);
+
+//        Insets insets = getInsets();
+//
+//        Dimension preferredSize = mainGamePanel.getPreferredSize(); // e.g., 1728 x 971
+//        int frameWidth = preferredSize.width + insets.left + insets.right;
+//        int frameHeight = preferredSize.height + insets.top + insets.bottom;
+//
+//        // Now explicitly set frame size to fit content
+//        setSize(frameWidth, frameHeight);
+    }
+
+    public static SantoriniFrame getInstance() {
+        if (instance == null) {
+            instance = new SantoriniFrame();
+        }
+        return instance;
     }
 
     // Method to switch views
     public void showView(String viewName) {
         cardLayout.show(cardPanel, viewName);
+    }
+
+    public void addView(JPanel view, String viewName) {
+        cardPanel.add(view, viewName);
     }
 }

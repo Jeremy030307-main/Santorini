@@ -5,7 +5,6 @@ import Model.Action.BuildAction;
 import Model.Action.MoveAction;
 import Model.Board.Board;
 import Model.Board.Cell;
-import Model.Game.Game;
 import Model.Game.GameState;
 import Model.Player.Player;
 import Model.Player.Worker;
@@ -47,24 +46,7 @@ public class ClassicGameRule {
         return actions;
     }
 
-    private boolean canMove(Worker worker, Cell targetCell) {
-
-        Cell currentCell = worker.getLocatedCell();
-
-        return currentCell.isAdjacentTo(targetCell) &&
-                !targetCell.isOccupied() &&
-                !targetCell.isComplete() &&
-                currentCell.getPosition().z() - targetCell.getPosition().z() > -1;
-    }
-
-    private boolean canBuild(Worker worker, Cell targetCell) {
-
-        return worker.getLocatedCell().isAdjacentTo(targetCell) &&
-                !targetCell.isOccupied() &&
-                !targetCell.isComplete();
-    }
-
-    public boolean isWin(GameState gameState) {
+    public boolean checkWin(GameState gameState) {
         Player currentPlayer = gameState.getTurnManager().getCurrentPlayer();
         Player opponent = gameState.getTurnManager().getOpponent(currentPlayer);
     
@@ -90,7 +72,7 @@ public class ClassicGameRule {
         return false; // No win condition met
     }
 
-    public boolean isLose(GameState gameState) {
+    public boolean checkLose(GameState gameState) {
         Player currentPlayer = gameState.getTurnManager().getCurrentPlayer();
     
         for (Worker worker : currentPlayer.getWorkers()) {
@@ -106,4 +88,25 @@ public class ClassicGameRule {
     
         return true; // All workers are stuck, player loses
     }
+
+    // Private method
+    private boolean canMove(Worker worker, Cell targetCell) {
+
+        Cell currentCell = worker.getLocatedCell();
+
+
+        boolean test =  currentCell.isAdjacentTo(targetCell) &&
+                !targetCell.isOccupied() &&
+                !targetCell.isComplete() &&
+                targetCell.getPosition().z() <= currentCell.getPosition().z() + 1  ;
+        return test;
+    }
+
+    private boolean canBuild(Worker worker, Cell targetCell) {
+
+        return worker.getLocatedCell().isAdjacentTo(targetCell) &&
+                !targetCell.isOccupied() &&
+                !targetCell.isComplete();
+    }
+
 }
