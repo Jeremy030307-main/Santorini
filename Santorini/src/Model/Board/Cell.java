@@ -77,6 +77,10 @@ public class Cell {
         return  occupant;
     }
 
+    public List<Block> getTower() {
+        return tower;
+    }
+
     @Override
     public String toString() {
         return getPosition().toString();

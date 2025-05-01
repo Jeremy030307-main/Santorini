@@ -1,4 +1,4 @@
-package View.Game;
+package View.Game.MapComponent;
 
 public enum JWorker {
 
@@ -6,8 +6,8 @@ public enum JWorker {
     ORANGE_FEMALE("Asset/Image/Worker/Orange/female.png"),
     PURPLE_MALE("Asset/Image/Worker/Purple/male.png"),
     PURPLE_FEMALE("Asset/Image/Worker/Purple/female.png"),
-    BLUE_MALE("Asset/Image/Worker/Red/male.png"),
-    BLUE_FEMALE("Asset/Image/Worker/Red/female.png"),;
+    RED_MALE("Asset/Image/Worker/Red/male.png"),
+    RED_FEMALE("Asset/Image/Worker/Red/female.png"),;
 
     public final String path;
 
@@ -22,5 +22,10 @@ public enum JWorker {
 
     public String getPath() {
         return path;
+    }
+
+    public static JWorker from(String color, String gender) {
+        String key = color.toUpperCase() + "_" + gender.toUpperCase();
+        return JWorker.valueOf(key); // Throws IllegalArgumentException if not found
     }
 }

@@ -51,8 +51,29 @@ public class Board {
         return surroundingCells;
     }
 
+    public List<Cell> getUnoccupiedCells() {
+
+        List<Cell> unOccupiedCells = new ArrayList<>();
+
+        for (int row = 0; row < cells.length; row++) {
+            for (int col = 0; col < cells[row].length; col++) {
+
+                Cell cell = cells[row][col];
+                if (!cell.isOccupied()) {
+                    unOccupiedCells.add(cell);
+                }
+            }
+        }
+
+        return unOccupiedCells;
+    }
+
     public boolean isInBounds(int x, int y) {
         return x >= 0 && x < SIZE && y >= 0 && y < SIZE;
+    }
+
+    public Cell[][] getCells() {
+        return cells;
     }
 
     @Override

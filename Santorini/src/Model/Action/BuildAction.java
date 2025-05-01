@@ -10,13 +10,8 @@ import Model.Player.Worker;
 
 public class BuildAction extends Action{
 
-    private final Cell targetCell;
-    private final Worker targetWorker;
-
     public BuildAction(Worker targetWorker, Cell targetCell) {
-        super("build", TurnPhase.BUILD, TurnPhase.END_TURN);
-        this.targetCell = targetCell;
-        this.targetWorker = targetWorker;
+        super("build", TurnPhase.BUILD, TurnPhase.END_TURN, targetWorker, targetCell);
     }
 
     @Override

@@ -37,18 +37,12 @@ public class GameState {
         return gameRule.buildActions(board, worker);
     }
 
-    public boolean isWin(){
-        return gameRule.isWin(this);
-    }
-
-    public boolean isLose(){
-        return gameRule.isLose(this);
-    }
-
     public void process(){
-        gameRule.isWin(this);
-        gameRule.isLose(this);
-        gameOver = true;
+        if (gameRule.checkWin(this)){
+            gameOver = true;
+        };
+
+        gameRule.checkLose(this);
     }
 
     public boolean isGameOver() {
