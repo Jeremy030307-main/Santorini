@@ -34,8 +34,10 @@ public class ChallengerChooseGodController {
 
     public void start() {
         mainFrame.showView(CHALLENGER_CHOOSE_GODS_VIEW);
+        menuPanel.setActivePlayerText(gameBuilderController.getGameBuilder().getCurrentPlayer().getName());
         addChooseGodsListener();
         addNextButtonListener();
+        addQuitButtonListener();
     }
 
     private void addChooseGodsListener(){
@@ -71,10 +73,22 @@ public class ChallengerChooseGodController {
         });
     }
 
+    private void addQuitButtonListener(){
+        menuPanel.getExitButton().addActionListener(e -> {
+            handleExitAction();
+        });
+    }
+
     private void handleNextAction(){
         if (gameBuilderController.getGameBuilder().isChooseGodsComplete()){
+            gameBuilderController.getGameBuilder().onChallengerSelectGodCardComplete();
             gameBuilderController.playerChooseGod();
         }
+    }
+
+    private void handleExitAction(){
+        gameBuilderController.getGameBuilder().onExitChallengerSelectGodCards();
+        mainFrame.showView(HomeController.HOME_VIEW);
     }
 
     // Helper method to reset button appearance

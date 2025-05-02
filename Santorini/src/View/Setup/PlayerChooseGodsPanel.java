@@ -40,7 +40,7 @@ public class PlayerChooseGodsPanel extends SetupPanel {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource(imagePath)));
         Image originalImage = icon.getImage();
 
-        int targetWidth = 120;
+        int targetWidth = (int) (getMaxWidth()*0.1);
         int targetHeight = (int) (originalImage.getHeight(null) *
                 ((double) targetWidth / originalImage.getWidth(null)));
 
@@ -64,5 +64,9 @@ public class PlayerChooseGodsPanel extends SetupPanel {
 
     public JButton getNextButton() {
         return rightButton;
+    }
+
+    public JButton getExitButton() {
+        return leftButton;
     }
 }

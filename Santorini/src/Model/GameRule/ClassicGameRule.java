@@ -78,56 +78,65 @@ public class ClassicGameRule {
      * @return {@code true} if the current player has won, {@code false} otherwise
      */
     public boolean checkWin(GameState gameState) {
-        Player currentPlayer = gameState.getTurnManager().getCurrentPlayer();
-        Player[] opponent = gameState.getTurnManager().getOpponents(currentPlayer);
-    
-        // 1. Check if any of current player's workers are standing on level 3
-        for (Worker worker : currentPlayer.getWorkers()) {
-            if (worker.getLocatedCell() != null && worker.getLocatedCell().getPosition().z() == 3) {
-                return true;  // classic win by reaching level 3
-            }
-        }
-    
-        // 2. Check if opponent has any workers placed on the board
-        boolean opponentHasWorkers = false;
-        for (Player player : opponent) {
-            for (Worker w : player.getWorkers()) {
-                if (w.getLocatedCell() != null) {
-                    opponentHasWorkers = true;
-                    break; // The opponent has at least one worker placed on the board
+
+        for (Player player : gameState.getPlayers()) {
+            // 1. Check if any of current player's workers are standing on level 3
+            for (Worker worker : player.getWorkers()) {
+                if (worker.getLocatedCell() != null && worker.getLocatedCell().getPosition().z() == 3) {
+                    player.setWin(true);
+                    return true;  // classic win by reaching level 3
                 }
             }
         }
 
-        if (!opponentHasWorkers) {
-            return true;  // Win condition met: the opponent has no workers placed on the board
-        }
-    
-        return false; // No win condition met
+//        // 2. Check if all opponent is lost
+//        for (Player player : opponent) {
+//            if (!player.isLose()){
+//                System.out.println("Still have player not lose");
+//                return false;
+//            }
+//        }
+//
+//        System.out.println("all opponent lose");
+//        currentPlayer.setWin(true);
+//        return true;
+        return false;
     }
 
     /**
      * Checks if the current player has lost the game.
-     * A loss occurs if all of the current player's workers are stuck and unable to move or build.
+     * A loss occurs if all the current player's workers are stuck and unable to move or build.
      *
      * @param gameState The current game state to evaluate lose conditions
      * @return {@code true} if the current player has lost, {@code false} otherwise
      */
     public boolean checkLose(GameState gameState) {
-        Player currentPlayer = gameState.getTurnManager().getCurrentPlayer();
-    
-        for (Worker worker : currentPlayer.getWorkers()) {
-            if (worker.getLocatedCell() != null) {
-                // If the worker can move OR build, player is not stuck
-                boolean canMove = !moveActions(gameState.getBoard(), worker).isEmpty();
-                boolean canBuild = !buildActions(gameState.getBoard(), worker).isEmpty();
-                if (canMove || canBuild) {
-                    return false; // Player still has options
+
+        boolean anyPlayerLost = false;
+
+        Player[] players = gameState.getPlayers();
+
+        for (Player player : players) {
+            boolean allStuck = true;
+
+            for (Worker worker : player.getWorkers()) {
+                if (worker.getLocatedCell() != null) {
+                    boolean canMove = !moveActions(gameState.getBoard(), worker).isEmpty();
+
+                    if (canMove) {
+                        allStuck = false; // This player still has options
+                        break;
+                    }
                 }
             }
+
+            if (allStuck) {
+                System.out.println("All stuck");
+                player.setLose(true);
+                anyPlayerLost = true;
+            }
         }
-    
-        return true; // All workers are stuck, player loses
+        return anyPlayerLost;
     }
 
     /**

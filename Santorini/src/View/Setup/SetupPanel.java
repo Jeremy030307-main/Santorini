@@ -4,6 +4,7 @@ import View.SantoriniPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.Objects;
 
 public abstract class SetupPanel extends SantoriniPanel {
@@ -12,8 +13,10 @@ public abstract class SetupPanel extends SantoriniPanel {
 
     protected JButton leftButton;
     protected JButton rightButton;
+    protected JLabel activePlayerTextLabel;
 
-    public SetupPanel(String logoImgPath, String leftButtonImgPath, String rightButtonImgPath, String leftButtonClickedImgPath, String rightButtonClickedImgPath) {
+
+    public SetupPanel(String logoImgPath, String leftButtonImgPath, String rightButtonImgPath, String leftButtonClickedImgPath, String rightButtonClickedImgPath){
         super(imgPath);
         setLayout(new GridBagLayout());
         add_active_player_label();
@@ -27,33 +30,64 @@ public abstract class SetupPanel extends SantoriniPanel {
     }
 
     private void add_active_player_label(){
-        ImageIcon logoIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("../../Asset/Image/Label/message.png")));
-        Image originalImage = logoIcon.getImage();
+        // Load and scale the background image
+        ImageIcon bgIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("../../Asset/Image/Label/message.png")));
+        Image originalImage = bgIcon.getImage();
 
-        int originalWidth = originalImage.getWidth(null);
-        int originalHeight = originalImage.getHeight(null);
-
-        // Set your desired width
         int targetWidth = (int) (getMaxWidth() * 0.3);
-
-        // Maintain aspect ratio: newHeight = (originalHeight / originalWidth) * targetWidth
-        int targetHeight = (int) (((double) originalHeight / originalWidth) * targetWidth);
+        int targetHeight = (int) (((double) originalImage.getHeight(null) / originalImage.getWidth(null)) * targetWidth);
 
         Image scaledImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
 
-        JLabel logoLabel = new JLabel(scaledIcon);
+        // Create base image label
+        JLabel imageLabel = new JLabel(scaledIcon);
+        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // Create text label to overlay
+        activePlayerTextLabel = new JLabel("", SwingConstants.CENTER);
+//        activePlayerTextLabel.setFont(new Font("Comic Sans MS", Font.BOLD, (int) (scaledIcon.getIconHeight()*0.25)));
+        activePlayerTextLabel.setForeground(Color.WHITE);
+        activePlayerTextLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        activePlayerTextLabel.setBorder(BorderFactory.createEmptyBorder((int) (getMaxHeight() * 0.02), 0, 0, 0));
+
+        // Load font from resource
+        Font customFont = null;
+        try {
+            customFont = Font.createFont(Font.TRUETYPE_FONT,
+                    getClass().getResourceAsStream("../../Asset/Font/DalekPinpointBold.ttf"));
+
+            customFont = customFont.deriveFont(Font.PLAIN,  (int) (scaledIcon.getIconHeight()*0.25));
+        } catch (FontFormatException | IOException e) {
+
+        }
+
+        activePlayerTextLabel.setFont(customFont);
+
+
+        // Move text down slightly (e.g., 10 pixels from the top)
+        activePlayerTextLabel.setBorder(BorderFactory.createEmptyBorder((int) (getMaxHeight()*0.02), 0, 0, 0));
+
+        // Create a panel with OverlayLayout to stack them
+        JPanel overlayPanel = new JPanel();
+        overlayPanel.setLayout(new OverlayLayout(overlayPanel));
+        overlayPanel.setOpaque(false);
+        overlayPanel.setPreferredSize(new Dimension(targetWidth, targetHeight));
+
+        overlayPanel.add(activePlayerTextLabel);
+        overlayPanel.add(imageLabel);
+
+        // Position using GridBagLayout
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 2; // Span across both columns
+        gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets((int) (getMaxHeight()*0.1), 0, 0, 0);
+        gbc.insets = new Insets((int) (getMaxHeight() * 0.1), 0, 0, 0);
         gbc.weightx = 1.0;
         gbc.weighty = 0.0;
 
-        add(logoLabel, gbc);
+        add(overlayPanel, gbc);
     }
 
     private void add_choose_gods_text(String imgPath) {
@@ -84,7 +118,6 @@ public abstract class SetupPanel extends SantoriniPanel {
         gbc.weighty = 0.0;
 
         add(logoLabel, gbc);
-
     }
 
     private void add_content() {
@@ -180,5 +213,11 @@ public abstract class SetupPanel extends SantoriniPanel {
         button.setPreferredSize(new Dimension(width, Math.max(normalHeight, clickedHeight)));
 
         return button;
+    }
+
+    public void setActivePlayerText(String text) {
+        if (activePlayerTextLabel != null) {
+            activePlayerTextLabel.setText(text);
+        }
     }
 }

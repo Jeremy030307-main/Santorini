@@ -5,6 +5,8 @@ import Model.Board.Board;
 import Model.GameRule.ClassicGameRule;
 import Model.Player.Player;
 import Model.Player.Worker;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +25,7 @@ public class GameState {
      /** The game rules being followed. */
     private final ClassicGameRule gameRule;
     /** The players in the game. */
-    private final Player[] players;
+    private Player[] players;
      /** The pool of available blocks for the game. */
     private final BlockPool blockPool;
      /** The turn manager that controls the turn order and player actions. */
@@ -32,6 +34,8 @@ public class GameState {
     private final SetupManager setupManager;
     /** Flag indicating whether the game is over or not. */
     private boolean gameOver;
+
+    private List<Player> losePlayers;
 
 
     /**
@@ -62,12 +66,34 @@ public class GameState {
         return gameRule.buildActions(board, worker);
     }
 
-    public void process(){
-        if (gameRule.checkWin(this)){
+    public void process() {
+        gameRule.checkLose(this);  // Mark players as 'lose' if stuck
+        gameRule.checkWin(this);   // Mark players as 'win' if on level 3 or opponents all lost
+
+        // Check how many players have NOT lost
+        int activePlayers = 0;
+        Player lastStanding = null;
+
+        for (Player player : players) {
+            if (!player.isLose()) {
+                activePlayers++;
+                lastStanding = player;
+            }
+        }
+
+        // If only one player is left and no one is marked as win yet
+        if (activePlayers == 1 && !lastStanding.isWin()) {
+            lastStanding.setWin(true);  // Last player standing wins
             gameOver = true;
         }
 
-        gameRule.checkLose(this);
+        // If any player has won, the game is over
+        for (Player player : players) {
+            if (player.isWin()) {
+                gameOver = true;
+                break;
+            }
+        }
     }
 
     public boolean isGameOver() {
@@ -94,6 +120,15 @@ public class GameState {
 
     public ClassicGameRule getGameRule() {
         return gameRule;
+    }
+
+    public Player getWinner(){
+        for (Player player : players) {
+            if (player.isWin()){
+                return player;
+            }
+        }
+        return null;
     }
 
      /**

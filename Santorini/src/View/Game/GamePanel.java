@@ -36,7 +36,7 @@ public class GamePanel extends SantoriniPanel {
      *
      * @param players The list of players in the game
      */
-    public GamePanel(List<JPlayer> players) {
+    public GamePanel(List<JPlayer> players, List<String> playerNames, List<String> playerGodCardsImgPaths) {
         super(imgPath);
 
         gameBoard = new JBoard();
@@ -52,7 +52,7 @@ public class GamePanel extends SantoriniPanel {
         layeredPane.setPreferredSize(new Dimension(width, height));
 
         createGameBoard(width, height);
-        createPlayerPanels();
+        createPlayerPanels(playerNames, playerGodCardsImgPaths);
         createQuitButton();
     }
 
@@ -71,28 +71,26 @@ public class GamePanel extends SantoriniPanel {
     }
 
 
-    private void createPlayerPanels() {
+    private void createPlayerPanels(List<String> playerNames, List<String> playerGodCardsImgPaths) {
         int panelWidth = (int) (getMaxWidth() * 0.25);
         int panelHeight = layeredPane.getPreferredSize().height;
 
-        leftPanel = new PlayerPanel(players.getFirst(), getMaxWidth(), getMaxHeight());
+        leftPanel = new PlayerPanel(players.getFirst(), playerNames.get(0),playerGodCardsImgPaths.get(0), getMaxWidth(), getMaxHeight());
         leftPanel.setBounds(0, 0, panelWidth, panelHeight);
         layeredPane.add(leftPanel, JLayeredPane.PALETTE_LAYER);
 
-        rightPanel = new PlayerPanel(players.getLast(), getMaxWidth(), getMaxHeight());
+        rightPanel = new PlayerPanel(players.getLast(), playerNames.get(1), playerGodCardsImgPaths.get(1), getMaxWidth(), getMaxHeight());
         rightPanel.setBounds(getMaxWidth() - panelWidth, 0, panelWidth, panelHeight);
         layeredPane.add(rightPanel, JLayeredPane.PALETTE_LAYER);
     }
 
     private void createQuitButton() {
-        int width = getMaxWidth();
-        int height = getMaxHeight();
+        int width = (int)(getMaxWidth() * 0.05);
+        int height = (int)(getMaxHeight() * 0.5);
 
-        ImageIcon quitIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("../../Asset/Image/Button/quit_button.png")));
-        Image quickImage = quitIcon.getImage().getScaledInstance((int)(width * 0.1), (int)(height * 0.15), Image.SCALE_SMOOTH);
+        quitButton = createImageButton("../../Asset/Image/Button/exit_icon.png", "../../Asset/Image/Button/exit_icon_pressed.png");
 
-        quitButton = new JButton(new ImageIcon(quickImage));
-        quitButton.setBounds(10, 10, quickImage.getWidth(null), quickImage.getHeight(null));
+        quitButton.setBounds(10, 10, width, width);
         quitButton.setContentAreaFilled(false);
         quitButton.setBorderPainted(false);
         quitButton.setFocusPainted(false);
@@ -122,13 +120,45 @@ public class GamePanel extends SantoriniPanel {
         return quitButton;
     }
 
-
     public JButton getEndTurnButon(int id) {
         if (id == 0) {
             return leftPanel.getTopButton();
         } else {
             return rightPanel.getTopButton();
         }
+    }
+
+    private JButton createImageButton(String normalImagePath, String clickedImagePath) {
+        // Load normal state image
+        ImageIcon normalIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource(normalImagePath)));
+        Image normalImage = normalIcon.getImage();
+
+        // Load clicked state image
+        ImageIcon clickedIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource(clickedImagePath)));
+        Image clickedImage = clickedIcon.getImage();
+
+        // Scale images (optional - adjust as needed)
+        int width = (int) (getMaxWidth() * 0.05); // Adjust to your preferred button width
+        int normalHeight = (int) (normalImage.getHeight(null) * ((double) width / normalImage.getWidth(null)));
+        int clickedHeight = (int) (clickedImage.getHeight(null) * ((double) width / clickedImage.getWidth(null)));
+
+        Image scaledNormal = normalImage.getScaledInstance(width, normalHeight, Image.SCALE_SMOOTH);
+        Image scaledClicked = clickedImage.getScaledInstance(width, clickedHeight, Image.SCALE_SMOOTH);
+
+        // Create button with image states
+        JButton button = new JButton(new ImageIcon(scaledNormal));
+
+        button.setPressedIcon(new ImageIcon(scaledClicked));
+
+        // Style adjustments
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+        button.setOpaque(false);
+        button.setMargin(new Insets(0, 0, 0, 0));
+        button.setPreferredSize(new Dimension(width, Math.max(normalHeight, clickedHeight)));
+
+        return button;
     }
 
 }

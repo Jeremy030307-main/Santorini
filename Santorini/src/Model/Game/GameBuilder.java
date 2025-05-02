@@ -20,7 +20,6 @@ public class GameBuilder {
     private final SetupManager setupManager;
     private final TurnManager turnManager;
 
-    private final int challengerIndex;
     private final List<GodCardFactory> chosenGods;
     private int currentPlayerIndex;
     private GodCardFactory selectedGodCard;
@@ -45,8 +44,8 @@ public class GameBuilder {
 
             default -> throw new IllegalArgumentException("Unsupported mode: " + mode);
         }
-        this.challengerIndex = selectRandomChallenger();
-        this.currentPlayerIndex = challengerIndex;
+        selectRandomChallenger();
+        this.currentPlayerIndex = 0;
         this.chosenGods = new ArrayList<>();
 
         this.board = new Board();
@@ -76,12 +75,22 @@ public class GameBuilder {
         }
     }
 
+    public void onChallengerSelectGodCardComplete(){
+        currentPlayerIndex += 1;
+
+        if (currentPlayerIndex >= players.length){
+            currentPlayerIndex = 0;
+        }
+    }
+
+    public void onExitChallengerSelectGodCards(){
+        chosenGods.clear();
+    }
+
     // player choose god
     public boolean isChooseGodComplete(){
-        System.out.println(players);
         for (Player player : players) {
             if (player.getGodCard() == null){
-                System.out.println("no god card" + player.getId());
                 return false;
             }
         }
@@ -102,8 +111,6 @@ public class GameBuilder {
             selectedGodCard = godCardFactory;
             return true;
         }
-
-
     }
 
     public void onPlayerGodSelectionComplete(){
@@ -131,21 +138,27 @@ public class GameBuilder {
         return players;
     }
 
-    public int getChallengerIndex() {
-        return challengerIndex;
-    }
-
-    public Player getChallenger() {
-        return players[challengerIndex];
-    }
-
     public List<GodCardFactory> getChosenGods() {
         return chosenGods;
     }
 
     private int selectRandomChallenger() {
         Random random = new Random();
-        return random.nextInt(players.length);
+        int selectedIndex = random.nextInt(players.length);
+
+        // Swap the selected challenger with the player at index 0
+        if (selectedIndex != 0) {
+            Player temp = players[0];
+            players[0] = players[selectedIndex];
+            players[selectedIndex] = temp;
+
+            // Update their IDs to match their new positions
+            players[0].setId(0);
+            players[selectedIndex].setId(selectedIndex);
+        }
+
+        return 0; // Challenger is now at index 0
     }
+
 }
 

@@ -28,7 +28,6 @@ public class HomeController {
     }
 
     private void loadGame() {
-        System.out.println("Loading game...");
         // Add loading logic here
     }
 }

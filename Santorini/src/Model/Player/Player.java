@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class Player {
 
-    private final int id;
+    private int id;
     private final String name;
     private final Worker[] workers = new Worker[2];
     private GodCard godCard;
@@ -61,8 +61,6 @@ public class Player {
         worker.setLocatedCell(cell);
         cell.setOccupant(worker);
 
-        // Print a message that the worker has been placed on the cell
-        System.out.println("Worker " + worker.getId() + " (" + name + ") has been placed on cell at position: (" + cell.getPosition() + ")");
     }
 
     /**
@@ -133,5 +131,25 @@ public class Player {
 
     public void setGodCard(GodCard godCard) {
         this.godCard = godCard;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setLose(boolean lose) {
+        for (Worker w : workers) {
+            w.getLocatedCell().clearOccupant();
+            w.setLocatedCell(null);
+        }
+        this.lose = lose;
+    }
+
+    public boolean isLose() {
+        return lose;
+    }
+
+    public boolean isWin() {
+        return win;
     }
 }

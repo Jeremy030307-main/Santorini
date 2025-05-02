@@ -7,6 +7,7 @@ import Model.Player.Player;
 import Model.Player.Worker;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TurnManager {
@@ -32,7 +33,6 @@ public class TurnManager {
     }
 
     public void handleWorkerSelection(int workerID){
-
         playerSelectedWorkerID = workerID;
         phase = TurnPhase.MOVE;
         return;
@@ -74,7 +74,6 @@ public class TurnManager {
 
     public void handleAction(Action action, GameState gameState){
         action.execute(gameState);
-        System.out.println(action.getNextPhase());
         phase = action.getNextPhase();
 
         if (action instanceof MoveAction moveAction) {
@@ -96,7 +95,11 @@ public class TurnManager {
 
 
     public void onEndTurn(){
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+        currentPlayerIndex ++;
+
+        if (currentPlayerIndex >= players.length) {
+            currentPlayerIndex = 0;
+        }
         playerSelectedWorkerID = null;
         phase = TurnPhase.START_TURN;
     }
@@ -113,6 +116,17 @@ public class TurnManager {
         return getCurrentPlayer().getWorkers()[playerSelectedWorkerID];
     }
 
+    public Worker[] getUnselectedWorker() {
+        List<Worker> unselectedWorker = new ArrayList<>();
+
+        for (Worker worker: getCurrentPlayer().getWorkers()) {
+            if (worker != getCurrentWorker()) {
+                unselectedWorker.add(worker);
+            }
+        }
+        return unselectedWorker.toArray(new Worker[0]);
+    }
+
     /**
      * Retrieves the opponent of the specified player.
      *
@@ -127,5 +141,9 @@ public class TurnManager {
             }
         }
         return opponents.toArray(new Player[0]);
+    }
+
+    public void setCurrentPlayerIndex(int currentPlayerIndex) {
+        this.currentPlayerIndex = currentPlayerIndex;
     }
 }

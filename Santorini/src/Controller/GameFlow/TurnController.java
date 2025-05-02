@@ -10,6 +10,7 @@ import View.Game.MapComponent.JCell;
 import View.Game.MapComponent.JCellAction;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -23,6 +24,7 @@ public class TurnController {
     private final GamePanel gamePanel;
     private final GameController gameController;
     private final Map<JCell, MouseListener> attachedListeners = new HashMap<>();
+    private ActionListener endTurnListener;
 
     public TurnController(TurnManager turnManager, GamePanel gamePanel, GameController gameController) {
         this.turnManager = turnManager;
@@ -45,36 +47,34 @@ public class TurnController {
     private void updateUIForCurrentPhase(GameState gameState) {
         switch (turnManager.getPhase()) {
             case START_TURN:
-                System.out.println("Starting turn");
                 turnManager.onStartTurn();
                 processTurn(gameState);
                 break;
             case SELECT_WORKER:
-                System.out.println("Selecting worker");
                 showWorkerSelection(turnManager.getCurrentPlayer().getWorkers(), gameState);
                 break;
             case MOVE:
-                System.out.println("Moving");
+                showWorkerSelection(turnManager.getUnselectedWorker(), gameState);
                 showWorkerAction(turnManager.getMoveActions(gameState), gameState, JCellAction.MOVE);
                 break;
             case BUILD:
-                System.out.println("Building");
                 showWorkerAction(turnManager.getBuildActions(gameState), gameState, JCellAction.BUILD);
                 break;
             case MOVE_OR_BUILD:
-                System.out.println("Moving or Build");
                 break;
             case OPTIONAL_ACTION:
-                System.out.println("Optional action");
-
                 List<Action> optionalActions = turnManager.getOptionalActions(gameState);
                 Action endTurnAction = optionalActions.removeLast();
-                gameController.updateGamePanel(gameController.getGame().getGameState(), turnManager.getPhase().getPhaseText() + ": " +optionalActions.getFirst().getCurrentPhase().getPhaseText());
-                showWorkerAction(optionalActions, gameState, JCellAction.USE_POWER);
-                showEndTurnAction(endTurnAction,  gameState);
+                if (!optionalActions.isEmpty()) {
+                    gameController.updateGamePanel(gameController.getGame().getGameState(), turnManager.getPhase().getPhaseText() + ": " +optionalActions.getFirst().getCurrentPhase().getPhaseText());
+                    showWorkerAction(optionalActions, gameState, JCellAction.USE_POWER);
+                    showEndTurnAction(endTurnAction,  gameState);
+                } else {
+                    turnManager.handleAction(endTurnAction, gameState);
+                    processTurn(gameState);
+                }
                 break;
             case END_TURN:
-                System.out.println("Ending turn");
                 turnManager.onEndTurn();
                 processTurn(gameState);
                 break;
@@ -110,7 +110,6 @@ public class TurnController {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     turnManager.handleAction(action, gameState);
-                    System.out.println("Next Phase" + action.getNextPhase());
                     clearListeners();
                     processTurn(gameState);
                 }
@@ -120,12 +119,15 @@ public class TurnController {
 
     private void showEndTurnAction(Action action, GameState gameState) {
         JButton endTurnButton = gamePanel.getEndTurnButon(turnManager.getCurrentPlayer().getId());
-        endTurnButton.addActionListener(e -> {
-            System.out.println("Next Phase End Turn" + action.getNextPhase());
+
+        endTurnListener = e -> {
             turnManager.handleAction(action, gameState);
             clearListeners();
+            endTurnButton.removeActionListener(endTurnListener);
             processTurn(gameState);
-        });
+        };
+
+        endTurnButton.addActionListener(endTurnListener);
     }
 
     private void addListener(JCell cellDisplay,  MouseListener listener){
@@ -150,6 +152,7 @@ public class TurnController {
 
         // update the board view
         gamePanel.getGameBoard().update();
+        attachedListeners.clear();
     }
 
 }

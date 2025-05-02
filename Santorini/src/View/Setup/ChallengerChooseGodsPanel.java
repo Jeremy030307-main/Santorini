@@ -32,7 +32,6 @@ public class ChallengerChooseGodsPanel extends SetupPanel {
             godCardButton.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
             cardsPanel.add(godCardButton);
         }
-
         return cardsPanel;
     }
 
@@ -52,7 +51,7 @@ public class ChallengerChooseGodsPanel extends SetupPanel {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource(imagePath)));
         Image originalImage = icon.getImage();
 
-        int targetWidth = 120;
+        int targetWidth = (int) (getMaxWidth()*0.1);
         int targetHeight = (int) (originalImage.getHeight(null) *
                 ((double) targetWidth / originalImage.getWidth(null)));
 

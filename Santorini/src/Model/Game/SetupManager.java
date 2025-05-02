@@ -50,7 +50,6 @@ public class SetupManager {
     }
 
     public Worker getCurrentWorker() {
-        System.out.println("Setup: " + currentPlayerIndex + " " + currentWorkerIndex);
         return players[currentPlayerIndex].getWorkers()[currentWorkerIndex];
     }
 }

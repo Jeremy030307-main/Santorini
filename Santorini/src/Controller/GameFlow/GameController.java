@@ -5,6 +5,7 @@ import Controller.SetupController;
 import Model.Board.Block;
 import Model.Board.Cell;
 import Model.Game.*;
+import Model.GodCard.GodCardFactory;
 import Model.Player.Player;
 import View.Game.GamePanel;
 import View.Game.MapComponent.*;
@@ -31,11 +32,15 @@ public class GameController {
 
         this.game = game;
         List<JPlayer> displayPlayers = new ArrayList<>();
+        List<String> displayPlayerNames = new ArrayList<>();
+        List<String> displayGodCardsPath = new ArrayList<>();
         for (Player player : game.getGameState().getPlayers()) {
             displayPlayers.add(JPlayer.from(player.getWorkerColor().toString()));
+            displayPlayerNames.add(player.getName());
+            displayGodCardsPath.add(matchCardImage(player.getGodCard().getName()));
         }
 
-        this.gamePanel = new GamePanel(displayPlayers);
+        this.gamePanel = new GamePanel(displayPlayers, displayPlayerNames, displayGodCardsPath);
         this.mainFrame = santoriniFrame;
 
         this.setupController = new SetupController(this.game.getGameState().getSetupManager(), this.gamePanel, this);
@@ -57,7 +62,7 @@ public class GameController {
     }
 
     public void gameOver(){
-        gameOverController.showWinPanel();
+        gameOverController.showWinPanel(game.getGameState().getWinner());
     }
 
     public void updateGamePanel(GameState gameState, String actionLabelText) {
@@ -101,6 +106,19 @@ public class GameController {
 
     public void setCurrentPlayerIndex(int currentPlayerIndex) {
         this.currentPlayerIndex = currentPlayerIndex;
+    }
+
+    private String matchCardImage(GodCardFactory god){
+
+        switch (god){
+            case ARTEMIS -> {
+                return "Asset/Image/GodCard/Artemis/podium.png";
+            }
+            case DEMETER -> {
+                return "Asset/Image/GodCard/Demeter/podium.png";
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + god);
+        }
     }
 }
 

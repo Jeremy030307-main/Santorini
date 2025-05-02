@@ -33,9 +33,10 @@ public class PlayerChooseGodController {
         }
         this.playerChooseGodsPanel = new PlayerChooseGodsPanel(godCardImagePath);
         this.mainFrame.addView(this.playerChooseGodsPanel, PLAYER_CHOOSE_GOD_VIEW);
+        playerChooseGodsPanel.setActivePlayerText(gameBuilderController.getGameBuilder().getCurrentPlayer().getName());
         addChooseGodsListener();
         addNextButtonListener();
-
+        addQuitButtonListener();
         mainFrame.showView(PLAYER_CHOOSE_GOD_VIEW);
     }
 
@@ -53,7 +54,6 @@ public class PlayerChooseGodController {
     private void handleGodCardSelected(JButton godButton, GodCardFactory god) {
         if (gameBuilderController.getGameBuilder().onPlayerSelectGodCard(god)) {
             // Selection successful - apply selected visual effect
-            System.out.println("Selected");
             for (JButton button : playerChooseGodsPanel.getGodCardButtons()) {
                 if (button.equals(godButton)) {
                     button.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3, true));
@@ -74,7 +74,6 @@ public class PlayerChooseGodController {
     }
 
     private void addNextButtonListener(){
-
         playerChooseGodsPanel.getNextButton().addActionListener(e -> {
             handleNextAction();
         });
@@ -84,7 +83,6 @@ public class PlayerChooseGodController {
         gameBuilderController.getGameBuilder().onPlayerGodSelectionComplete();
 
         if (!gameBuilderController.getGameBuilder().isChooseGodComplete()){
-            System.out.println("Continue");
             start();
         } else {
             gameBuilderController.creatGame();
@@ -110,11 +108,14 @@ public class PlayerChooseGodController {
         }
     }
 
+    private void addQuitButtonListener(){
+        playerChooseGodsPanel.getExitButton().addActionListener(e -> {
+            handleExitAction();
+        });
+    }
 
-
-
-
-
-
-
+    private void handleExitAction(){
+        gameBuilderController.getGameBuilder().onExitChallengerSelectGodCards();
+        mainFrame.showView(HomeController.HOME_VIEW);
+    }
 }
