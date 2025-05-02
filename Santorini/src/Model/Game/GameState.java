@@ -66,6 +66,10 @@ public class GameState {
         return null;
     }
 
+    public ClassicGameRule getGameRule() {
+        return gameRule;
+    }
+
     public SetupManager getSetupManager() {
         return setupManager;
     }

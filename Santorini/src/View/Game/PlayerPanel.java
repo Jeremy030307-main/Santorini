@@ -11,6 +11,8 @@ public class PlayerPanel extends JPanel {
     private final JLabel baseLabel;
     private final JLabel textLabel;
     private final JLabel cloudLabel;
+    private final JButton topButton;
+    private boolean buttonVisible = false;
 
     public PlayerPanel(JPlayer player, int width, int height) {
         setLayout(null);
@@ -35,20 +37,39 @@ public class PlayerPanel extends JPanel {
         textLabel = new JLabel("", SwingConstants.CENTER);
         textLabel.setFont(new Font("Comic Sans MS", Font.BOLD, (int)(cloudLabel.getHeight() * 0.25)));
         textLabel.setForeground(Color.BLACK);
-        textLabel.setBounds(20, (int)(height * 0.91), baseImage.getWidth(null), 20);
+        textLabel.setBounds(20, (int)(height * 0.87), baseImage.getWidth(null), baseImage.getHeight(null));
+
+        Image buttonImage = loadImage("Asset/Image/Button/end_turn.png", width * 0.15, height * 0.07);
+        topButton = new JButton(new ImageIcon(buttonImage));
+        topButton.setBounds(
+                (int)(baseLabel.getX() + baseLabel.getWidth()/2 - buttonImage.getWidth(null)/2), // Center horizontally
+                (int)(baseLabel.getY() - buttonImage.getHeight(null) - 5), // Position above base image
+                buttonImage.getWidth(null),
+                buttonImage.getHeight(null)
+        );
+
+        topButton.setContentAreaFilled(false);
+        topButton.setBorderPainted(false);
+        topButton.setFocusPainted(false);
+        topButton.setOpaque(false);
+        topButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        topButton.setVisible(buttonVisible);
 
         add(textLabel);
         add(baseLabel);
         add(overlayLabel);
         add(cloudLabel);
+        add(topButton); // Added last so it appears on top
+
     }
 
-    public void update(String text, boolean visible) {
+    public void update(String text, boolean visible, boolean buttonVisible) {
         System.out.println(text);
         textLabel.setText(text);
         baseLabel.setVisible(visible);
         textLabel.setVisible(visible);
         cloudLabel.setVisible(visible);
+        topButton.setVisible(buttonVisible);
         repaint();
         revalidate();
     }
@@ -56,5 +77,9 @@ public class PlayerPanel extends JPanel {
     private Image loadImage(String path, double w, double h) {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("../../" + path)));
         return icon.getImage().getScaledInstance((int)w, (int)h, Image.SCALE_SMOOTH);
+    }
+
+    public JButton getTopButton() {
+        return topButton;
     }
 }

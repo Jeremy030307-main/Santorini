@@ -9,6 +9,7 @@ import View.Game.GamePanel;
 import View.Game.MapComponent.JCell;
 import View.Game.MapComponent.JCellAction;
 
+import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -63,6 +64,15 @@ public class TurnController {
             case MOVE_OR_BUILD:
                 System.out.println("Moving or Build");
                 break;
+            case OPTIONAL_ACTION:
+                System.out.println("Optional action");
+
+                List<Action> optionalActions = turnManager.getOptionalActions(gameState);
+                Action endTurnAction = optionalActions.removeLast();
+                gameController.updateGamePanel(gameController.getGame().getGameState(), turnManager.getPhase().getPhaseText() + ": " +optionalActions.getFirst().getCurrentPhase().getPhaseText());
+                showWorkerAction(optionalActions, gameState, JCellAction.USE_POWER);
+                showEndTurnAction(endTurnAction,  gameState);
+                break;
             case END_TURN:
                 System.out.println("Ending turn");
                 turnManager.onEndTurn();
@@ -100,11 +110,22 @@ public class TurnController {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     turnManager.handleAction(action, gameState);
+                    System.out.println("Next Phase" + action.getNextPhase());
                     clearListeners();
                     processTurn(gameState);
                 }
             });
         }
+    }
+
+    private void showEndTurnAction(Action action, GameState gameState) {
+        JButton endTurnButton = gamePanel.getEndTurnButon(turnManager.getCurrentPlayer().getId());
+        endTurnButton.addActionListener(e -> {
+            System.out.println("Next Phase End Turn" + action.getNextPhase());
+            turnManager.handleAction(action, gameState);
+            clearListeners();
+            processTurn(gameState);
+        });
     }
 
     private void addListener(JCell cellDisplay,  MouseListener listener){

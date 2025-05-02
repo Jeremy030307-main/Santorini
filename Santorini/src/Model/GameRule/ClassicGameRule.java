@@ -48,7 +48,7 @@ public class ClassicGameRule {
 
     public boolean checkWin(GameState gameState) {
         Player currentPlayer = gameState.getTurnManager().getCurrentPlayer();
-        Player opponent = gameState.getTurnManager().getOpponent(currentPlayer);
+        Player[] opponent = gameState.getTurnManager().getOpponents(currentPlayer);
     
         // 1. Check if any of current player's workers are standing on level 3
         for (Worker worker : currentPlayer.getWorkers()) {
@@ -59,12 +59,15 @@ public class ClassicGameRule {
     
         // 2. Check if opponent has any workers placed on the board
         boolean opponentHasWorkers = false;
-        for (Worker w : opponent.getWorkers()) {
-            if (w.getLocatedCell() != null) {
-                opponentHasWorkers = true;
-                break; // The opponent has at least one worker placed on the board
+        for (Player player : opponent) {
+            for (Worker w : player.getWorkers()) {
+                if (w.getLocatedCell() != null) {
+                    opponentHasWorkers = true;
+                    break; // The opponent has at least one worker placed on the board
+                }
             }
         }
+
         if (!opponentHasWorkers) {
             return true;  // Win condition met: the opponent has no workers placed on the board
         }

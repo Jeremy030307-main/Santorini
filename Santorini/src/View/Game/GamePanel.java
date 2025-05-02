@@ -76,10 +76,10 @@ public class GamePanel extends SantoriniPanel {
         layeredPane.add(quitButton, JLayeredPane.POPUP_LAYER); // ensures it's on top
     }
 
-    public void setActivePlayerID(int id, String label) {
+    public void setActivePlayerID(int id, String label, boolean buttonVisible) {
 
-        leftPanel.update(label, id == 0);
-        rightPanel.update(label, id == 1);
+        leftPanel.update(label, id == 0, id == 0 && buttonVisible);
+        rightPanel.update(label, id == 1, id == 1 && buttonVisible);
 
         layeredPane.revalidate();
         layeredPane.repaint();
@@ -91,6 +91,14 @@ public class GamePanel extends SantoriniPanel {
 
     public JButton getQuitButton() {
         return quitButton;
+    }
+
+    public JButton getEndTurnButon(int id) {
+        if (id == 0) {
+            return leftPanel.getTopButton();
+        } else {
+            return rightPanel.getTopButton();
+        }
     }
 }
 

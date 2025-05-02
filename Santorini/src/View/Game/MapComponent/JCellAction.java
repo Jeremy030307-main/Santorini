@@ -7,7 +7,7 @@ public enum JCellAction {
     BUILD("Asset/Image/Cell/CellAction/build.png", Color.BLUE),
     MOVE("Asset/Image/Cell/CellAction/move.png", Color.MAGENTA),
     CHOOSE_WORKER("Asset/Image/Cell/CellAction/choose_worker.png", Color.BLACK),
-    USE_POWER("Asset/Image/Cell/CellAction/usePower.png", Color.ORANGE);
+    USE_POWER("Asset/Image/Cell/CellAction/use_power.png", Color.ORANGE);
 
     public final String path;
     public final Color borderColor;

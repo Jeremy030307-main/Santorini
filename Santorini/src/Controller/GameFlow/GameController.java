@@ -3,12 +3,9 @@ package Controller.GameFlow;
 import Controller.HomeController;
 import Controller.SetupController;
 import Model.Board.Block;
-import Model.Board.Board;
 import Model.Board.Cell;
 import Model.Game.*;
-import Model.GameRule.ClassicGameRule;
 import Model.Player.Player;
-import Model.Player.WorkerColor;
 import View.Game.GamePanel;
 import View.Game.MapComponent.*;
 import View.SantoriniFrame;
@@ -83,7 +80,7 @@ public class GameController {
             }
         }
 
-        gamePanel.setActivePlayerID(currentPlayerIndex, actionLabelText);
+        gamePanel.setActivePlayerID(currentPlayerIndex, actionLabelText, gameState.getTurnManager().getPhase()==TurnPhase.OPTIONAL_ACTION);
         gamePanel.getGameBoard().update();
         gamePanel.validate();
         gamePanel.repaint();

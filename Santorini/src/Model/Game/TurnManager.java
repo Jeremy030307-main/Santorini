@@ -1,7 +1,12 @@
 package Model.Game;
 
 import Model.Action.Action;
+import Model.Action.BuildAction;
+import Model.Action.MoveAction;
 import Model.Player.Player;
+import Model.Player.Worker;
+
+import javax.swing.text.html.HTMLDocument;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,13 +62,29 @@ public class TurnManager {
         return moveBuildActions;
     }
 
-    public void getOptionalActions(GameState gameState) {
-
+    public List<Action> getOptionalActions(GameState gameState) {
+        return getCurrentPlayer().getGodCard().getOptionalActions(gameState, getCurrentWorker());  // last one is a do nothing action
     }
 
     public void handleAction(Action action, GameState gameState){
         action.execute(gameState);
+        System.out.println(action.getNextPhase());
         phase = action.getNextPhase();
+
+        if (action instanceof MoveAction moveAction) {
+            getCurrentPlayer().getGodCard().afterMove(action, gameState);
+
+            for (Player player : getOpponents(getCurrentPlayer())) {
+                player.getGodCard().afterOpponentMove(action, gameState);
+            }
+        } else if (action instanceof BuildAction buildAction) {
+            getCurrentPlayer().getGodCard().afterBuild(action, gameState);
+
+            for (Player player : getOpponents(getCurrentPlayer())) {
+                player.getGodCard().afterOpponentBuild(action, gameState);
+            }
+        }
+
         gameState.process();
     }
 
@@ -81,12 +102,17 @@ public class TurnManager {
         return players[currentPlayerIndex];
     }
 
-    public Player getOpponent(Player player) {
+    public Worker getCurrentWorker() {
+        return getCurrentPlayer().getWorkers()[playerSelectedWorkerID];
+    }
+
+    public Player[] getOpponents(Player player) {
+        List<Player> opponents = new ArrayList<>();
         for (Player p : players) {
             if (!p.equals(player)) {
-                return p;
+                opponents.add(p);
             }
         }
-        return null;
+        return opponents.toArray(new Player[0]);
     }
 }

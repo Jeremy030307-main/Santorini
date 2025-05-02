@@ -109,6 +109,7 @@ public class GameBuilder {
     public void onPlayerGodSelectionComplete(){
         chosenGods.remove(selectedGodCard);
         getCurrentPlayer().setGodCard(selectedGodCard.getConstructor().get());
+        getCurrentPlayer().getGodCard().setPlayer(getCurrentPlayer());
 
         selectedGodCard = null;
         currentPlayerIndex += 1;

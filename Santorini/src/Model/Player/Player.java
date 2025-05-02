@@ -26,8 +26,8 @@ public class Player {
         this.name = name;
         this.godCard = godCard;
         this.workerColor = workerColor;
-        this.workers[0] = new Worker(1, this, WorkerType.MALE, workerColor);
-        this.workers[1] = new Worker(2, this, WorkerType.FEMALE, workerColor);
+        this.workers[0] = new Worker(0, this, WorkerType.MALE, workerColor);
+        this.workers[1] = new Worker(1, this, WorkerType.FEMALE, workerColor);
         this.win = false;
         this.lose = false;
     }
