@@ -23,7 +23,7 @@ public class Player {
     private final int id;
     private final String name;
     private final Worker[] workers = new Worker[2];
-    private final GodCard godCard;
+    private GodCard godCard;
     private final WorkerColor workerColor;
 
     private boolean win;
@@ -44,8 +44,8 @@ public class Player {
         this.name = name;
         this.godCard = godCard;
         this.workerColor = workerColor;
-        this.workers[0] = new Worker(1, this, WorkerType.MALE, workerColor);
-        this.workers[1] = new Worker(2, this, WorkerType.FEMALE, workerColor);
+        this.workers[0] = new Worker(0, this, WorkerType.MALE, workerColor);
+        this.workers[1] = new Worker(1, this, WorkerType.FEMALE, workerColor);
         this.win = false;
         this.lose = false;
     }
@@ -125,5 +125,13 @@ public class Player {
      */
     public WorkerColor getWorkerColor() {
         return workerColor;
+    }
+
+    public void setWin(boolean win) {
+        this.win = win;
+    }
+
+    public void setGodCard(GodCard godCard) {
+        this.godCard = godCard;
     }
 }

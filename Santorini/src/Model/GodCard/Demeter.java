@@ -1,9 +1,12 @@
 package Model.GodCard;
 
 import Model.Action.Action;
+import Model.Action.DoNothingAction;
 import Model.Board.Cell;
+import Model.Game.GameState;
 import Model.Game.TurnPhase;
-import java.util.Iterator;
+import Model.Player.Worker;
+
 import java.util.List;
 
 /**
@@ -18,7 +21,6 @@ import java.util.List;
 public class Demeter extends GodCard {
 
     private Cell firstBuildCell;
-    private boolean extraBuildUsed;
 
     /**
      * Constructs a new Demeter god card.
@@ -26,8 +28,7 @@ public class Demeter extends GodCard {
      * but prevents the worker from building on the same space as the first build.
      */
     public Demeter() {
-        super("Demeter", "Your Worker may build one additional time, but not on the same space.");
-        this.extraBuildUsed = false;
+        super(GodCardFactory.DEMETER, "Your Worker may build one additional time, but not on the same space.", null);
     }
 
     /**
@@ -40,23 +41,27 @@ public class Demeter extends GodCard {
      */
     @Override
     public List<Action> beforeBuild(List<Action> buildActions) {
-
-        if (!extraBuildUsed){
-            for (Action action: buildActions){
-                action.setNextPhase(TurnPhase.BUILD);
-                extraBuildUsed = true;
-                firstBuildCell = action.getTargetCell();
-            }
-        } else {
-            // Second build: disallow building on the same cell as first
-            Iterator<Action> iterator = buildActions.iterator();
-            while (iterator.hasNext()) {
-                Action action = iterator.next();
-                if (action.getTargetCell().equals(firstBuildCell)) {
-                    iterator.remove();
-                }
-            }
+        for (Action action: buildActions){
+            action.setNextPhase(TurnPhase.OPTIONAL_ACTION);
         }
+
         return buildActions;
+    }
+
+    @Override
+    public void afterBuild(Action buildAction, GameState gameState) {
+        firstBuildCell = buildAction.getTargetCell();
+    }
+
+    @Override
+    public List<Action> getOptionalActions(GameState gameState, Worker currentWorker) {
+        List<Action> actions = new java.util.ArrayList<>(gameState.getGameRule().buildActions(gameState.getBoard(), currentWorker)
+                .stream().filter(action -> !action.getTargetCell().getPosition().equals(firstBuildCell.getPosition())).toList());
+
+        DoNothingAction doNothingAction = new DoNothingAction(currentWorker, TurnPhase.END_TURN);
+
+        actions.add(doNothingAction);
+
+        return actions;
     }
 }

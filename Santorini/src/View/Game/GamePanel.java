@@ -22,8 +22,9 @@ public class GamePanel extends SantoriniPanel {
 
     private static final String imgPath = "map.png";
     private final JBoard gameBoard;
-    private JPanel right;
-    private JPanel left;
+    private JButton quitButton;
+    private PlayerPanel leftPanel;
+    private PlayerPanel rightPanel;
     private JLayeredPane layeredPane;
 
     private final List<JPlayer> players;
@@ -51,8 +52,8 @@ public class GamePanel extends SantoriniPanel {
         layeredPane.setPreferredSize(new Dimension(width, height));
 
         createGameBoard(width, height);
-        createLeftPanel();
-        createRightPanel();
+        createPlayerPanels();
+        createQuitButton();
     }
 
     /**
@@ -66,8 +67,6 @@ public class GamePanel extends SantoriniPanel {
         int boardSize = (int) (getMaxWidth() * 0.42);
         gameBoard.setBounds((int) ((width - boardSize) / 1.99), (int) ((height - boardSize) / 2.2), boardSize, boardSize);
         gameBoard.setOpaque(false);
-        gameBoard.setBorder(BorderFactory.createLineBorder(Color.RED)); // debug border
-
         layeredPane.add(gameBoard, JLayeredPane.DEFAULT_LAYER);
     }
 
@@ -107,28 +106,42 @@ public class GamePanel extends SantoriniPanel {
      * The panel is added to the layered pane.
      */
     private void createRightPanel() {
+    private void createPlayerPanels() {
         int panelWidth = (int) (getMaxWidth() * 0.25);
         int panelHeight = layeredPane.getPreferredSize().height;
 
-        right = new JPanel(new BorderLayout());
-        right.setOpaque(false);
-        right.setBounds(layeredPane.getPreferredSize().width - panelWidth, 0, panelWidth, panelHeight);
+        leftPanel = new PlayerPanel(players.getFirst(), getMaxWidth(), getMaxHeight());
+        leftPanel.setBounds(0, 0, panelWidth, panelHeight);
+        layeredPane.add(leftPanel, JLayeredPane.PALETTE_LAYER);
 
-        // Load and scale image
-        ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("../../" + players.getLast().getPath())));
-        Image scaledImage = originalIcon.getImage().getScaledInstance((int) (getMaxWidth() * 0.2), (int)(getMaxHeight() * 0.1), Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImage);
-        JLabel imageLabel = new JLabel(scaledIcon);
-        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        rightPanel = new PlayerPanel(players.getLast(), getMaxWidth(), getMaxHeight());
+        rightPanel.setBounds(getMaxWidth() - panelWidth, 0, panelWidth, panelHeight);
+        layeredPane.add(rightPanel, JLayeredPane.PALETTE_LAYER);
+    }
 
-        // Padding panel to offset from bottom
-        JPanel paddedPanel = new JPanel(new BorderLayout());
-        paddedPanel.setOpaque(false);
-        paddedPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0)); // 20px bottom padding
-        paddedPanel.add(imageLabel, BorderLayout.CENTER);
+    private void createQuitButton() {
+        int width = getMaxWidth();
+        int height = getMaxHeight();
 
-        right.add(paddedPanel, BorderLayout.SOUTH);
-        layeredPane.add(right, JLayeredPane.PALETTE_LAYER);
+        ImageIcon quitIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("../../Asset/Image/Button/quit_button.png")));
+        Image quickImage = quitIcon.getImage().getScaledInstance((int)(width * 0.1), (int)(height * 0.15), Image.SCALE_SMOOTH);
+
+        quitButton = new JButton(new ImageIcon(quickImage));
+        quitButton.setBounds(10, 10, quickImage.getWidth(null), quickImage.getHeight(null));
+        quitButton.setContentAreaFilled(false);
+        quitButton.setBorderPainted(false);
+        quitButton.setFocusPainted(false);
+
+        layeredPane.add(quitButton, JLayeredPane.POPUP_LAYER); // ensures it's on top
+    }
+
+    public void setActivePlayerID(int id, String label, boolean buttonVisible) {
+
+        leftPanel.update(label, id == 0, id == 0 && buttonVisible);
+        rightPanel.update(label, id == 1, id == 1 && buttonVisible);
+
+        layeredPane.revalidate();
+        layeredPane.repaint();
     }
 
     /**
@@ -147,6 +160,8 @@ public class GamePanel extends SantoriniPanel {
      */
     public JPanel getRight() {
         return right;
+    public JButton getQuitButton() {
+        return quitButton;
     }
 
     /**
@@ -165,6 +180,12 @@ public class GamePanel extends SantoriniPanel {
      */
     public JLayeredPane getLayeredPane() {
         return layeredPane;
+    public JButton getEndTurnButon(int id) {
+        if (id == 0) {
+            return leftPanel.getTopButton();
+        } else {
+            return rightPanel.getTopButton();
+        }
     }
 }
 

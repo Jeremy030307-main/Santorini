@@ -3,15 +3,6 @@ package Model.GodCard;
 import Model.Action.Action;
 import java.util.List;
 
-/**
- * The {@code GodCard} class serves as the base class for all god cards in the game.
- * Each god card has a name and description and provides hooks for the game flow,
- * such as the ability to perform actions before or after a player or opponent moves or builds.
- * <p>
- * This class is extended by specific god card implementations, which override the 
- * methods to define the unique behavior of each god card.
- * </p>
- */
 public abstract class GodCard {
 
     protected  String name;
@@ -25,18 +16,11 @@ public abstract class GodCard {
      */
     public GodCard(String name, String description) {
         this.name = name;
+    public GodCard(GodCardFactory godName, String description, Player player) {
+        this.godName = godName;
         this.description = description;
+        this.player = player;
     }
-
-    /**
-     * Retrieves the name of the god card.
-     *
-     * @return The name of the god card
-     */
-    public String getName() {
-        return name;
-    }
-
     /**
      * Retrieves the description of the god card.
      *
@@ -46,20 +30,9 @@ public abstract class GodCard {
         return description;
     }
 
-    /**
-     * Hook method for setting up the god card before the game starts.
-     * This method is empty by default and can be overridden by specific god card implementations.
-     */
     public void onSetup(){
     };
 
-    /**
-     * Hook method for modifying the list of possible move actions before a move is made.
-     * This method is empty by default and can be overridden by specific god card implementations.
-     *
-     * @param moveActions The list of available move actions
-     * @return A potentially modified list of move actions
-     */
     public List<Action> beforeMove(List<Action> moveActions){
         return moveActions;
     };
@@ -68,16 +41,10 @@ public abstract class GodCard {
      * Hook method to execute after a move is made.
      * This method is empty by default and can be overridden by specific god card implementations.
      */
-    public void afterMove(){
-    };
+    public void afterMove(Action moveAction, GameState gameState){
 
-    /**
-     * Hook method for modifying the list of possible build actions before a build is made.
-     * This method is empty by default and can be overridden by specific god card implementations.
-     *
-     * @param buildActions The list of available build actions
-     * @return A potentially modified list of build actions
-     */
+
+
     public List<Action> beforeBuild(List<Action> buildActions) {
         return buildActions;
     };
@@ -86,44 +53,60 @@ public abstract class GodCard {
      * Hook method to execute after a build is made.
      * This method is empty by default and can be overridden by specific god card implementations.
      */
-    public void afterBuild() {};
+    public void afterBuild(Action buildAction, GameState gameState) {};
+
+    public List<Action> getOptionalActions(GameState gameState, Worker currentWorker) {return null;};
 
     /**
      * Hook method to execute before an opponent's move.
      * This method is empty by default and can be overridden by specific god card implementations.
      */
-    public void beforeOpponentMove(){
-    };
+    public void beforeOpponentMove(List<Action> moveActions){}
+            }
 
     /**
      * Hook method to execute after an opponent's move.
      * This method is empty by default and can be overridden by specific god card implementations.
      */
-    public void afterOpponentMove(){
-    };
+    public void afterOpponentMove(Action moveAction, GameState gameState){
 
     /**
      * Hook method to execute before an opponent's build action.
      * This method is empty by default and can be overridden by specific god card implementations.
      */
-    public void beforeOpponentBuild() {
+    public void beforeOpponentBuild(List<Action> buildActions) {
     };
 
     /**
      * Hook method to execute after an opponent's build action.
      * This method is empty by default and can be overridden by specific god card implementations.
      */
-    public void afterOpponentBuild() {}
+    public void afterOpponentBuild(Action buildAction, GameState gameState) {}
 
     /**
      * Hook method to determine if the player has won the game.
      * This method is empty by default and can be overridden by specific god card implementations.
      */
-    public void isWin(){}
+    public void isWin(GameState gameState){}
 
+    public String getDescription() {
+        return description;
+    }
+
+    public GodCardFactory getName() {
+        return godName;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
     /**
      * Hook method to determine if the player has lost the game.
      * This method is empty by default and can be overridden by specific god card implementations.
      */
-    public void isLose(){}
-}
+    public void isLose(GameState gameState){}
+

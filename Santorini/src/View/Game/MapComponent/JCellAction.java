@@ -12,54 +12,32 @@ import java.awt.*;
  */
 public enum JCellAction {
 
-    /**
-     * Represents the build action on a cell, associated with a blue border color.
-     */
     BUILD("Asset/Image/Cell/CellAction/build.png", Color.BLUE),
-
-    /**
-     * Represents the move action on a cell, associated with a magenta border color.
-     */
     MOVE("Asset/Image/Cell/CellAction/move.png", Color.MAGENTA),
-
-    /**
-     * Represents the choose worker action on a cell, associated with a black border color.
-     */
     CHOOSE_WORKER("Asset/Image/Cell/CellAction/choose_worker.png", Color.BLACK),
 
     /**
      * Represents the use power action on a cell, associated with an orange border color.
      */
-    USE_POWER("Asset/Image/Cell/CellAction/usePower.png", Color.ORANGE);
+    USE_POWER("Asset/Image/Cell/CellAction/use_power.png", Color.ORANGE);
 
     public final String path;
     public final Color borderColor;
 
     /**
-     * Constructs a new {@code JCellAction} with the specified image path and border color.
+     * Constructor of the JCellStatus
      *
-     * @param path The path to the image associated with the action
-     * @param borderColor1 The border color associated with the action
+     * @param path the path containing the proper image
      */
     JCellAction(String path, Color borderColor1) {
         this.path = path;
         this.borderColor = borderColor1;
     }
 
-    /**
-     * Retrieves the image path associated with the action.
-     *
-     * @return The image path of the action
-     */
     public String getPath() {
         return path;
     }
 
-    /**
-     * Retrieves the border color associated with the action.
-     *
-     * @return The border color of the action
-     */
     public Color getBorderColor() {
         return borderColor;
     }

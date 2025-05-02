@@ -5,26 +5,12 @@ import Controller.HomeController;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * The {@code SantoriniFrame} class represents the main window for the Santorini game.
- * This class extends {@link JFrame} and manages the display of different views using a {@link CardLayout}.
- * The frame includes methods to switch between different views and add new views dynamically.
- * <p>
- * It initializes the main game frame, sets up the layout, and provides methods to control the views
- * shown to the user during gameplay. The frame is responsible for managing the game's user interface.
- * </p>
- */
 public class SantoriniFrame extends JFrame {
 
     private static SantoriniFrame instance;
     private CardLayout cardLayout;
     private JPanel cardPanel;
 
-    /**
-     * Constructs a new {@code SantoriniFrame} instance.
-     * This constructor initializes the main game window, sets up a {@link CardLayout} to handle different views,
-     * and displays the home view. It also sets the properties of the frame, such as the title, visibility, and size.
-     */
     private SantoriniFrame() {
         setTitle("Santorini");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,18 +39,13 @@ public class SantoriniFrame extends JFrame {
 //        setSize(frameWidth, frameHeight);
     }
 
-    /**
-     * Retrieves the singleton instance of {@code SantoriniFrame}.
-     * If the instance does not exist, it creates a new one.
-     *
-     * @return The singleton instance of {@code SantoriniFrame}
-     */
     public static SantoriniFrame getInstance() {
         if (instance == null) {
             instance = new SantoriniFrame();
         }
         return instance;
     }
+
 
     /**
      * Switches the current view to the specified view name.
@@ -76,13 +57,6 @@ public class SantoriniFrame extends JFrame {
         cardLayout.show(cardPanel, viewName);
     }
 
-    /**
-     * Adds a new view to the {@code cardPanel} with the specified view name.
-     * This method allows new panels to be dynamically added to the {@link CardLayout}.
-     *
-     * @param view The panel to add to the frame
-     * @param viewName The name associated with the view to be used for switching views
-     */
     public void addView(JPanel view, String viewName) {
         cardPanel.add(view, viewName);
     }

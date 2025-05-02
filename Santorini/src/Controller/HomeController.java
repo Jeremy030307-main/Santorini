@@ -10,7 +10,6 @@ public class HomeController {
     private final HomePanel homePanel;
     private final SantoriniFrame mainFrame;
 
-
     public HomeController(SantoriniFrame  santoriniFrame) {
         this.homePanel = new HomePanel();
         this.mainFrame = santoriniFrame;
@@ -24,9 +23,8 @@ public class HomeController {
     }
 
     private void startNewGame() {
-        GameController gameController = new GameController(mainFrame);
-        mainFrame.showView(GameController.GAME_VIEW);
-        gameController.startGame();
+        GameBuilderController gameBuilderController = new GameBuilderController(mainFrame);
+        gameBuilderController.challengerChooseGod();
     }
 
     private void loadGame() {
