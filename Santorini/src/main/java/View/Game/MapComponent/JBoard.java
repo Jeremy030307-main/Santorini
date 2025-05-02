@@ -1,5 +1,7 @@
 package View.Game.MapComponent;
 
+import Model.Board.Cell;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -15,34 +17,50 @@ public class JBoard extends JPanel {
 
     private static final int SIZE = 5;
 
+
     private JCell[][] board;
 
     /**
      * Constructs a new {@code JBoard} instance, initializing a 5x5 grid of cells.
      * The board is rendered using a {@link GridBagLayout} layout, and each cell is added to the panel.
      */
-    public JBoard() {
+    public JBoard(boolean[][] cellLayout) {
+        int height = cellLayout.length;
+        int width = 0;
+        for (boolean[] row : cellLayout) {
+            width = Math.max(width, row.length);
+        }
 
-        super(new GridBagLayout());
-        board = new JCell[SIZE][SIZE];
+        this.board = new JCell[width][height];
 
+        setLayout(new GridBagLayout());
         setOpaque(false);
         setVisible(true);
 
-        for (int col = 0; col < SIZE; col++) {
-            for (int row = 0; row < SIZE; row++) {
+        for (int y = 0; y < height; y++) {
+            boolean[] row = cellLayout[height - 1 - y]; // invert Y for display
+            for (int x = 0; x < row.length; x++) {
 
                 GridBagConstraints c = new GridBagConstraints();
-                c.gridx = row;
-                c.gridy = SIZE - col - 1;
+                c.gridx = x;
+                c.gridy = SIZE - y - 1;
                 c.fill = GridBagConstraints.BOTH;
                 c.weighty = 1;
                 c.weightx = 1;
                 c.insets = new Insets(10, 10,10,10);
 
-                JCell cell = new JCell(row, col);
-                board[row][col] = cell;
-                add(cell, c);
+
+                if (row[x]) {
+                    JCell comp = new JCell(x,y);
+                    board[x][y] = comp;
+                    add(comp, c);
+                } else {
+                    JComponent comp = new JPanel();
+                    board[x][y] = null;
+                    comp.setBackground(Color.BLACK);
+                    add(comp, c);
+                }
+
             }
         }
     }

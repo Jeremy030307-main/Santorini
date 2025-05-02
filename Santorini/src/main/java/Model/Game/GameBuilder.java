@@ -14,10 +14,10 @@ public class GameBuilder {
 
     private GameMode mode;
     private final Player[] players;
-    private final Board board;
+    private Board board;
     private final ClassicGameRule gameRule;
     private final BlockPool blockPool;
-    private final SetupManager setupManager;
+    private SetupManager setupManager;
     private final TurnManager turnManager;
 
     private final List<GodCardFactory> chosenGods;
@@ -48,10 +48,8 @@ public class GameBuilder {
         this.currentPlayerIndex = 0;
         this.chosenGods = new ArrayList<>();
 
-        this.board = new Board();
         this.gameRule = new ClassicGameRule();
         this.blockPool = new BlockPool();
-        this.setupManager = new SetupManager(players, board);
         this.turnManager = new TurnManager(players);
     }
 
@@ -124,6 +122,11 @@ public class GameBuilder {
         if (currentPlayerIndex >= players.length){
             currentPlayerIndex = 0;
         }
+    }
+
+    public  void setBoardLayout(boolean[][] layout){
+        this.board = new Board(layout);
+        this.setupManager = new SetupManager(players, board);
     }
 
     public GodCardFactory getSelectedGodCard() {

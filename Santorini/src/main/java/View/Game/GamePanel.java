@@ -36,10 +36,10 @@ public class GamePanel extends SantoriniPanel {
      *
      * @param players The list of players in the game
      */
-    public GamePanel(List<JPlayer> players, List<String> playerNames, List<String> playerGodCardsImgPaths) {
+    public GamePanel(List<JPlayer> players, List<String> playerNames, List<String> playerGodCardsImgPaths, boolean[][] cellLayout) {
         super(imgPath);
 
-        gameBoard = new JBoard();
+        gameBoard = new JBoard(cellLayout);
         this.players = players;
         setLayout(new BorderLayout());
 

@@ -28,7 +28,7 @@ public class GameController {
 
     private int currentPlayerIndex;
 
-    public GameController(SantoriniFrame santoriniFrame, Game game) {
+    public GameController(SantoriniFrame santoriniFrame, Game game, boolean[][] layout) {
 
         this.game = game;
         List<JPlayer> displayPlayers = new ArrayList<>();
@@ -40,7 +40,7 @@ public class GameController {
             displayGodCardsPath.add(matchCardImage(player.getGodCard().getName()));
         }
 
-        this.gamePanel = new GamePanel(displayPlayers, displayPlayerNames, displayGodCardsPath);
+        this.gamePanel = new GamePanel(displayPlayers, displayPlayerNames, displayGodCardsPath, layout);
         this.mainFrame = santoriniFrame;
 
         this.setupController = new SetupController(this.game.getGameState().getSetupManager(), this.gamePanel, this);

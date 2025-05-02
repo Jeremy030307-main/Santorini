@@ -16,18 +16,32 @@ public class Board {
     /** The fixed size of the board (5x5). */
     private static final int SIZE = 5;
 
-    /** Two-dimensional array of cells on the board. */
+    private final int width;
+    private final int height;
     private final Cell[][] cells;
+    /** Two-dimensional array of cells on the board. */
 
     /**
      * Constructs a new 5x5 Santorini board, initializing all cells.
      */
-    public Board() {
-        cells = new Cell[SIZE][SIZE];
+    public Board(boolean[][] cellLayout) {
+        this.height = cellLayout.length;
+        int tmp = 0;
+        for (boolean[] row : cellLayout) {
+            tmp = Math.max(tmp, row.length); // account for jagged arrays
+        }
+        this.width = tmp;
 
-        for (int y = 0; y < SIZE; y++) {
-            for (int x = 0; x < SIZE; x++) {
-                cells[x][y] = new Cell(x, y);
+        cells = new Cell[width][height];
+
+        for (int y = 0; y < height; y++) {
+            boolean[] row = cellLayout[height - 1 - y]; // invert Y to match (0,0) at bottom-left
+            for (int x = 0; x < row.length; x++) {
+                if (row[x]) {
+                    cells[x][y] = new Cell(x, y);
+                } else {
+                    cells[x][y] = null;
+                }
             }
         }
     }

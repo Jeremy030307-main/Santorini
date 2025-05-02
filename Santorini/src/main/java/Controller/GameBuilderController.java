@@ -15,11 +15,22 @@ public class GameBuilderController {
     private final ChallengerChooseGodController challengerChooseController;
     private final PlayerChooseGodController playerChooseController;
 
+    boolean[][] layout;
+
     public GameBuilderController(SantoriniFrame santoriniFrame){
         this.santoriniFrame = santoriniFrame;
         this.gameBuilder = new GameBuilder(GameMode.TWO_PLAYER);
         this.challengerChooseController = new ChallengerChooseGodController(santoriniFrame, this);
         this.playerChooseController = new PlayerChooseGodController(santoriniFrame, this);
+
+        this.layout = new boolean[][]{
+                {true, true, true, true, true},
+                {true, true, true, true, true},
+                {true, true, true, true, true},
+                {true, true, true, true, true},
+                {true, true, true, true, true}
+        };
+        this.gameBuilder.setBoardLayout(layout);
     }
 
     public void challengerChooseGod(){
@@ -31,7 +42,7 @@ public class GameBuilderController {
     }
 
     public void creatGame(){
-        GameController gameController = new GameController(santoriniFrame, gameBuilder.buildGame());
+        GameController gameController = new GameController(santoriniFrame, gameBuilder.buildGame(), layout);
         gameController.setupGame();
     }
 
