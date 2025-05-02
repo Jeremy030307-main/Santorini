@@ -70,42 +70,7 @@ public class GamePanel extends SantoriniPanel {
         layeredPane.add(gameBoard, JLayeredPane.DEFAULT_LAYER);
     }
 
-    /**
-     * Creates the left panel for displaying the first player's information.
-     * The panel includes an image for the player and is positioned on the left side of the game panel.
-     * The panel is added to the layered pane.
-     */
-    private void createLeftPanel() {
-        int panelWidth = (int) (getMaxWidth() * 0.25);
-        int panelHeight = layeredPane.getPreferredSize().height;
 
-        left = new JPanel(new BorderLayout());
-        left.setOpaque(false);
-        left.setBounds(0, 0, panelWidth, panelHeight);
-
-        // Load and scale the image
-        ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("../../" + players.getFirst().getPath())));
-        Image scaledImage = originalIcon.getImage().getScaledInstance((int) (getMaxWidth() * 0.2), (int)(getMaxHeight() * 0.1), Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImage);
-        JLabel imageLabel = new JLabel(scaledIcon);
-        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        // Wrap in a panel to add padding at the bottom
-        JPanel paddedPanel = new JPanel(new BorderLayout());
-        paddedPanel.setOpaque(false);
-        paddedPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0)); // 20px bottom padding
-        paddedPanel.add(imageLabel, BorderLayout.CENTER);
-
-        left.add(paddedPanel, BorderLayout.SOUTH);
-        layeredPane.add(left, JLayeredPane.PALETTE_LAYER);
-    }
-
-    /**
-     * Creates the right panel for displaying the second player's information.
-     * The panel includes an image for the player and is positioned on the right side of the game panel.
-     * The panel is added to the layered pane.
-     */
-    private void createRightPanel() {
     private void createPlayerPanels() {
         int panelWidth = (int) (getMaxWidth() * 0.25);
         int panelHeight = layeredPane.getPreferredSize().height;
@@ -153,33 +118,11 @@ public class GamePanel extends SantoriniPanel {
         return gameBoard;
     }
 
-    /**
-     * Retrieves the right player panel.
-     *
-     * @return The {@link JPanel} object representing the right player panel
-     */
-    public JPanel getRight() {
-        return right;
     public JButton getQuitButton() {
         return quitButton;
     }
 
-    /**
-     * Retrieves the left player panel.
-     *
-     * @return The {@link JPanel} object representing the left player panel
-     */
-    public JPanel getLeft() {
-        return left;
-    }
 
-    /**
-     * Retrieves the layered pane that contains the game board and player panels.
-     *
-     * @return The {@link JLayeredPane} object used for rendering the game components
-     */
-    public JLayeredPane getLayeredPane() {
-        return layeredPane;
     public JButton getEndTurnButon(int id) {
         if (id == 0) {
             return leftPanel.getTopButton();
@@ -187,6 +130,7 @@ public class GamePanel extends SantoriniPanel {
             return rightPanel.getTopButton();
         }
     }
+
 }
 
 

@@ -11,6 +11,9 @@ import java.util.Scanner;
 
 public class SetupManager {
 
+    public final static String ADD_WORKER_TEXT = "Add A Worker";
+
+
     private final Player[] players;
     private final Board board;
 

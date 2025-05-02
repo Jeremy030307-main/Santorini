@@ -1,7 +1,11 @@
 package Model.Game;
 
 import Model.Action.Action;
+import Model.Action.BuildAction;
+import Model.Action.MoveAction;
 import Model.Player.Player;
+import Model.Player.Worker;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,9 +74,26 @@ public class TurnManager {
 
     public void handleAction(Action action, GameState gameState){
         action.execute(gameState);
+        System.out.println(action.getNextPhase());
         phase = action.getNextPhase();
+
+        if (action instanceof MoveAction moveAction) {
+            getCurrentPlayer().getGodCard().afterMove(action, gameState);
+
+            for (Player player : getOpponents(getCurrentPlayer())) {
+                player.getGodCard().afterOpponentMove(action, gameState);
+            }
+        } else if (action instanceof BuildAction buildAction) {
+            getCurrentPlayer().getGodCard().afterBuild(action, gameState);
+
+            for (Player player : getOpponents(getCurrentPlayer())) {
+                player.getGodCard().afterOpponentBuild(action, gameState);
+            }
+        }
+
         gameState.process();
     }
+
 
     public void onEndTurn(){
         currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
@@ -91,7 +112,6 @@ public class TurnManager {
     public Worker getCurrentWorker() {
         return getCurrentPlayer().getWorkers()[playerSelectedWorkerID];
     }
-
 
     /**
      * Retrieves the opponent of the specified player.
