@@ -6,29 +6,30 @@ This project is a digital implementation of the board game **Santorini**, built 
 
 ## 📁 Project Structure
 
+```text
 src/
 └── main/
-└── java/
-├── Controller/ # Handles game logic, flow control, and UI events
-│ ├── GameFlow/
-│ ├── ChallengerChoose... (God selection)
-│ ├── HomeController.java
-│ ├── SetupController.java
-│ └── ...
-├── Model/ # Core game logic and data classes
-│ ├── Action/
-│ ├── Board/
-│ ├── Game/
-│ ├── GameRule/
-│ ├── GodCard/
-│ └── Player/
-├── View/ # GUI components and UI rendering
-│ ├── Game/
-│ ├── GameOver/
-│ ├── Home/
-│ ├── Setup/
-│ └── ...
-└── Main.java # Application entry point
+    └── java/
+        ├── Controller/         # Handles game logic, flow control, and UI events
+        │   ├── GameFlow/
+        │   ├── ChallengerChoose... (God selection)
+        │   ├── HomeController.java
+        │   ├── SetupController.java
+        │   └── ...
+        ├── Model/              # Core game logic and data classes
+        │   ├── Action/
+        │   ├── Board/
+        │   ├── Game/
+        │   ├── GameRule/
+        │   ├── GodCard/
+        │   └── Player/
+        ├── View/               # GUI components and UI rendering
+        │   ├── Game/
+        │   ├── GameOver/
+        │   ├── Home/
+        │   ├── Setup/
+        │   └── ...
+        └── Main.java           # Application entry point
 
 
 ## 🎮 Features Implemented
