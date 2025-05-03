@@ -30,6 +30,7 @@ src/
         │   ├── Setup/
         │   └── ...
         └── Main.java           # Application entry point
+```
 
 
 ## 🎮 Features Implemented
