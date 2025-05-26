@@ -1,102 +1,207 @@
 package Controller;
 
 import Controller.GameFlow.GameController;
-import Model.Board.Cell;
-import Model.Board.Position;
-import Model.Game.SetupManager;
-import Model.Player.Worker;
-import View.Game.GamePanel;
-import View.Game.MapComponent.JBoard;
-import View.Game.MapComponent.JCell;
-import View.Game.MapComponent.JCellAction;
-import View.Game.MapComponent.JWorker;
+import Model.Board.Board;
+import Model.Game.*;
+import Model.GameRule.ClassicGameRule;
+import Model.GodCard.GodCardFactory;
+import Model.Player.Player;
+import Model.Player.WorkerColor;
+import View.SantoriniFrame;
+import View.Setup.ChooseGodPanel;
+import View.Setup.MiniGodCardButton;
+import View.Setup.SetupLobby;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.HashMap;
-import java.util.Map;
+import javax.swing.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SetupController {
 
-    private final SetupManager setupManager;
-    private final GamePanel gamePanel;
-    private final GameController gameController;
-    private final Map<JCell, MouseListener> attachedListeners = new HashMap<>();
+    public static final String SETUP_VIEW = "setupView";
 
-    public SetupController(SetupManager setupManager, GamePanel gamePanel, GameController gameController) {
-        this.setupManager = setupManager;
-        this.gamePanel = gamePanel;
-        this.gameController = gameController;
+    private final SantoriniFrame santoriniFrame;
+    private final SetupLobby setupLobby;
+    private final ChooseGodPanel chooseGodPanel;
+
+    private Player[] players;
+    private int[] playerSelectedGods;
+    private boolean[] playerSelecting;
+    private int currentPlayerIndex;
+
+    private Board board;
+    private ClassicGameRule gameRule;
+    private BlockPool blockPool;
+    private SetupManager setupManager;
+    private TurnManager turnManager;
+    private boolean[][] layout;
+
+    private final List<GodCardFactory> allGods;
+
+    public SetupController(SantoriniFrame santoriniFrame, GameMode gameMode) {
+
+        // creation of model object
+        switch (gameMode) {
+            case TWO_PLAYER -> {
+
+                players = new Player[2];
+                playerSelecting = new boolean[2]; playerSelecting[0] = false;playerSelecting[1] = false;
+
+                playerSelectedGods = new int[2];playerSelectedGods[0] = -1;playerSelectedGods[1] = -1;
+                players[0] = new Player(0, "Player 1", null, WorkerColor.ORANGE);
+                players[1] = new Player(1, "Player 2", null, WorkerColor.PURPLE);
+            }
+            case THREE_PLAYER -> {
+
+                players = new Player[3];
+                playerSelecting = new boolean[3]; playerSelecting[0] = false;playerSelecting[1] = false;playerSelecting[2] = false;
+                playerSelectedGods = new int[3];playerSelectedGods[0] = -1;playerSelectedGods[1] = -1;playerSelectedGods[2] = -1;
+                players[0] = new Player(0, "Player 1", null, WorkerColor.ORANGE);
+                players[1] = new Player(1, "Player 2", null, WorkerColor.PURPLE);
+                players[2] = new Player(2, "Player 3", null, WorkerColor.RED);
+            }
+
+            default -> throw new IllegalArgumentException("Unsupported mode: " + gameMode);
+        }
+        currentPlayerIndex = 0;
+
+        this.allGods = GodCardFactory.getAllGods();
+        this.gameRule = new ClassicGameRule();
+        this.turnManager = new TurnManager(players);
+        this.layout = new boolean[][]{
+                {true, true, true, true, true},
+                {true, true, true, true, true},
+                {true, true, true, true, true},
+                {true, true, true, true, true},
+                {true, true, true, true, true}
+        };
+        this.board = new Board(layout);
+        this.setupManager = new SetupManager(players, board);
+        this.blockPool = new BlockPool();
+
+
+        setupLobby = new SetupLobby();
+        chooseGodPanel = new ChooseGodPanel(allGods.stream().map(GodCardFactory::getName).collect(Collectors.toList()));
+        this.santoriniFrame = santoriniFrame;
+
+        santoriniFrame.addView(setupLobby, SETUP_VIEW);
+        setup();
     }
 
     public void setup(){
 
-        if (setupManager.isSetupComplete()) {
-            gameController.startGame();
-            return;
-        }
+        setupLobby.addCard(chooseGodPanel, "chooseGodCard");
 
-        gameController.setCurrentPlayerIndex(setupManager.getCurrentPlayer().getId());
-        gameController.updateGamePanel(gameController.getGame().getGameState(), SetupManager.ADD_WORKER_TEXT);
-        updateUIForCurrentPhase();
+        // First phase of setup: God Selection
+        setupLobby.showView("chooseGodCard");
+
+        // player 1 should be the first to select the god card
+        chooseGodPanel.getPlayerButtons().getFirst().setVisible(true);
+        playerSelecting[0] = true;
+
+        // set up the action listener for each button first
+        setupChooseGodCardButton();
+        setupPlayerButton();
+        setupConfirmButton();
+
     }
 
-    private void updateUIForCurrentPhase(){
-        JBoard boardDisplay = gamePanel.getGameBoard();
-        gameController.setCurrentPlayerIndex(setupManager.getCurrentPlayer().getId());
+    public void start(){
+        // first
+        santoriniFrame.showView(SETUP_VIEW);
+    }
 
-        for  (Cell cell : setupManager.getUnoccupiedCells()) {
-            Position pos = cell.getPosition();
-            JCell cellDisplay = boardDisplay.getCell(pos.x(), pos.y());
+    private void setupPlayerButton(){
 
-            cellDisplay.setAction(JCellAction.CHOOSE_WORKER);
+        List<JButton> buttons = chooseGodPanel.getPlayerButtons();
+        for (int i = 0; i < buttons.size(); i++) {
+            JButton playerButton = buttons.get(i);
 
-            addListener(cellDisplay, new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    placeWorker(pos);
-                    clearListeners();
-                    setup();
+            int finalI = i;
+            playerButton.addActionListener(e -> {
+                if (playerSelecting[finalI]){
+                    nextPlayer(null);
+                    buttons.get((finalI +1)%(buttons.size())).setVisible(true);
+                    playerButton.setText("Edit");
+                } else {
+                    nextPlayer(finalI);
+                    playerButton.setText("Confirm");
                 }
             });
         }
     }
 
-    public void placeWorker(Position pos){
+    private void setupChooseGodCardButton(){
+        List<MiniGodCardButton> buttons = chooseGodPanel.getGodCardButtons();
 
-        Worker currentWorker = setupManager.getCurrentWorker();
-        setupManager.placeWorker(pos);  // place the worker in the core game logic
-        JCell cellDisplay = gamePanel.getGameBoard().getCell(pos.x(), pos.y());
-        cellDisplay.setWorker(JWorker.from(currentWorker.getWorkerColor().toString(), currentWorker.getGender().toString())); // place the worker in the GUI
+        for (int i = 0; i < buttons.size(); i++) {
+            int godIndex = i;
+            buttons.get(godIndex).addActionListener(e-> {
 
-        // post action after setting the worker
-        cellDisplay.clearAction();
-        removeListener(cellDisplay);
-    }
+                // check if the player select a god card previously
+                if (playerSelectedGods[currentPlayerIndex] >= 0){
+                    // if yes, remove the selected filter on the button
+                    buttons.get(playerSelectedGods[currentPlayerIndex]).setSelected(MiniGodCardButton.SelectionColor.NONE);
+                }
+                playerSelectedGods[currentPlayerIndex] = godIndex;
 
-    private void addListener(JCell cellDisplay,  MouseListener listener){
-        cellDisplay.addMouseListener(listener);
-        attachedListeners.put(cellDisplay, listener);
-    }
+                chooseGodPanel.setPlayerPanel(currentPlayerIndex, allGods.get(godIndex).getName(), allGods.get(godIndex).getDescription());
 
-    private void removeListener(JCell cellDisplay){
-        MouseListener listener = attachedListeners.remove(cellDisplay);
-        cellDisplay.removeMouseListener(listener);
-    }
-
-    private void clearListeners(){
-        for (Map.Entry<JCell, MouseListener> entry : attachedListeners.entrySet()) {
-            JCell cell = entry.getKey();
-            MouseListener listener = entry.getValue();
-
-            cell.removeMouseListener(listener);
-            cell.clearAction();
+                // set the selected filter on button based on different player
+                chooseGodPanel.getPlayerButtons().get(currentPlayerIndex).setEnabled(true);
+                if (currentPlayerIndex==0){
+                    buttons.get(godIndex).setSelected(MiniGodCardButton.SelectionColor.BLUE);
+                } else if (currentPlayerIndex==1){
+                    buttons.get(godIndex).setSelected(MiniGodCardButton.SelectionColor.RED);
+                }
+            });
         }
-        attachedListeners.clear();  // Important to clear the map after removal
-
-        // update the board view
-        gamePanel.getGameBoard().update();
     }
 
+    private void setupConfirmButton(){
+        chooseGodPanel.getConfirmButton().addActionListener(e -> {
+            for (int i = 0; i < players.length; i++) {
+                players[i].setGodCard(allGods.get(playerSelectedGods[i]).getConstructor().get());
+            }
+            Game game = new Game(board, players, gameRule, blockPool, turnManager, setupManager);
+            GameController gameController = new GameController(santoriniFrame, game, layout);
+            gameController.setupGame();
+        });
+    }
+
+    private void nextPlayer(Integer playerIndex){
+
+        List<JButton> playerButtons = chooseGodPanel.getPlayerButtons();
+
+        if (playerIndex == null){
+            // first set the current player to not selecting
+            playerSelecting[currentPlayerIndex] = false;
+
+            currentPlayerIndex = (currentPlayerIndex + 1) % (players.length);
+
+            for (int i = 0; i < players.length; i++) {
+                if (playerSelectedGods[i] < 0){ // this means player has selected a god before
+                    playerSelecting[currentPlayerIndex] = true;
+                    return;
+                }
+                playerButtons.get(i).setEnabled(true);
+            }
+
+            // if the program meet here, means all player already selected a god, so set the current player index to -1
+            currentPlayerIndex = -1;
+            chooseGodPanel.getConfirmButton().setEnabled(true);
+        } else {
+            currentPlayerIndex = playerIndex;
+            playerSelecting[currentPlayerIndex] = true;
+            chooseGodPanel.getConfirmButton().setEnabled(false);
+
+            for (int i = 0; i < players.length; i++) {
+                if (i != currentPlayerIndex){
+                    playerButtons.get(i).setEnabled(false);
+                } else {
+                    playerButtons.get(i).setEnabled(true);
+                }
+            }
+        }
+    }
 }
