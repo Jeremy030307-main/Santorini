@@ -55,7 +55,7 @@ public class WinPanel extends SantoriniPanel {
         );
 
         // Load and position overlay image (player tag/icon)
-        Image overlayImg = loadImage(jPlayer.getTagPath(), baseLabel.getWidth()-20, baseLabel.getHeight()-20);
+        Image overlayImg = loadImage("/Image/Worker/"+ jPlayer.getColor() + "/tag.png", baseLabel.getWidth()-20, baseLabel.getHeight()-20);
         JLabel overlayLabel = new JLabel(new ImageIcon(overlayImg));
         overlayLabel.setBounds(
                 middleX + (targetWidth - baseImage.getWidth(null)) / 2,

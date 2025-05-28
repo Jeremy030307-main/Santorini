@@ -1,33 +1,27 @@
-package View.Game;
+package View.Game.GenericGameView;
 
+import View.Game.BasicGameView.ActivePlayerPanel;
+import View.Game.BasicGameView.PlayerSidePanel;
 import View.Game.MapComponent.JBoard;
 import View.Game.MapComponent.JPlayer;
 import View.SantoriniPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
+import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Objects;
 
+public abstract class GenericGamePanel<T extends GenericPlayerSidePanel> extends SantoriniPanel {
 
-/**
- * The {@code GamePanel} class represents the main panel for rendering the game board and the player information in the Santorini game.
- * This class extends {@link SantoriniPanel} and handles the layout and initialization of the game board, player panels,
- * and interactions between the user interface components.
- * <p>
- * It contains methods for creating and managing the game board and the panels representing the players' information.
- * </p>
- */
-public class GamePanel extends SantoriniPanel {
+    protected static final String imgPath = "map.png";
+    protected final JBoard gameBoard;
+    protected JButton quitButton;
 
-    private static final String imgPath = "map.png";
-    private final JBoard gameBoard;
-    private JButton quitButton;
-    private PlayerPanel leftPanel;
-    private PlayerPanel rightPanel;
-    private JLayeredPane layeredPane;
+    protected T playersPanel;
+    protected final JLayeredPane layeredPane;
 
-    private final List<JPlayer> players;
+    protected final List<JPlayer> players;
 
     /**
      * Constructs a new {@code GamePanel} with the specified list of players.
@@ -36,7 +30,7 @@ public class GamePanel extends SantoriniPanel {
      *
      * @param players The list of players in the game
      */
-    public GamePanel(List<JPlayer> players, List<String> playerNames, List<String> playerGodCardsImgPaths, boolean[][] cellLayout) {
+    public GenericGamePanel(List<JPlayer> players, List<String> playerNames, List<String> playerGodCardsImgPaths, boolean[][] cellLayout) {
         super(imgPath);
 
         gameBoard = new JBoard(cellLayout);
@@ -71,19 +65,7 @@ public class GamePanel extends SantoriniPanel {
     }
 
 
-    private void createPlayerPanels(List<String> playerNames, List<String> playerGodCardsImgPaths) {
-        int panelWidth = (int) (getMaxWidth() * 0.25);
-        int panelHeight = layeredPane.getPreferredSize().height;
-
-        leftPanel = new PlayerPanel(players.getFirst(), playerNames.get(0),playerGodCardsImgPaths.get(0), getMaxWidth(), getMaxHeight());
-        leftPanel.setBounds(0, 0, panelWidth, panelHeight);
-        layeredPane.add(leftPanel, JLayeredPane.PALETTE_LAYER);
-
-        rightPanel = new PlayerPanel(players.getLast(), playerNames.get(1), playerGodCardsImgPaths.get(1), getMaxWidth(), getMaxHeight());
-        rightPanel.setBounds(getMaxWidth() - panelWidth, 0, panelWidth, panelHeight);
-        layeredPane.add(rightPanel, JLayeredPane.PALETTE_LAYER);
-    }
-
+    public abstract void createPlayerPanels(List<String> playerNames, List<String> playerGodCardsImgPaths);
     private void createQuitButton() {
         int width = (int)(getMaxWidth() * 0.05);
         int height = (int)(getMaxHeight() * 0.5);
@@ -100,9 +82,7 @@ public class GamePanel extends SantoriniPanel {
 
     public void setActivePlayerID(int id, String label, boolean buttonVisible) {
 
-        leftPanel.update(label, id == 0, id == 0 && buttonVisible);
-        rightPanel.update(label, id == 1, id == 1 && buttonVisible);
-
+        playersPanel.updateActivePlayer(id, label);
         layeredPane.revalidate();
         layeredPane.repaint();
     }
@@ -120,12 +100,8 @@ public class GamePanel extends SantoriniPanel {
         return quitButton;
     }
 
-    public JButton getEndTurnButon(int id) {
-        if (id == 0) {
-            return leftPanel.getTopButton();
-        } else {
-            return rightPanel.getTopButton();
-        }
+    public void setPlayerOptionalButton(int id, String buttonText, ActionListener actionListener) {
+        playersPanel.setOptionalButton(id, buttonText, actionListener);
     }
 
     private JButton createImageButton(String normalImagePath, String clickedImagePath) {
@@ -161,6 +137,7 @@ public class GamePanel extends SantoriniPanel {
         return button;
     }
 
+    public T getPlayersPanel() {
+        return playersPanel;
+    }
 }
-
-

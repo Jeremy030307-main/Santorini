@@ -1,6 +1,6 @@
 package Model.GameRule;
 
-import Model.Action.Action;
+import Model.Action.ActionList;
 import Model.Action.BuildAction;
 import Model.Action.MoveAction;
 import Model.Board.Board;
@@ -9,7 +9,6 @@ import Model.Game.GameState;
 import Model.Player.Player;
 import Model.Player.Worker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,13 +33,13 @@ public class ClassicGameRule {
      * @param worker The worker for whom the move actions are being evaluated
      * @return A list of move actions that the worker can perform
      */
-    public List<Action> moveActions(Board board, Worker worker){
+    public ActionList moveActions(Board board, Worker worker){
 
         List<Cell> movableCells = board.getSurroundingCell(worker.getLocatedCell().getPosition()).stream()
                 .filter(targetCell -> canMove(worker, targetCell))
                 .toList();
 
-        List<Action> actions = new ArrayList<>();
+        ActionList actions = new ActionList();
 
         for (Cell movableCell : movableCells){
             actions.add(new MoveAction(worker, movableCell));
@@ -56,12 +55,12 @@ public class ClassicGameRule {
      * @param worker The worker for whom the build actions are being evaluated
      * @return A list of build actions that the worker can perform
      */
-    public List<Action> buildActions(Board board, Worker worker){
+    public ActionList buildActions(Board board, Worker worker){
         List<Cell> movableCells = board.getSurroundingCell(worker.getLocatedCell().getPosition()).stream()
                 .filter(targetCell -> canBuild(worker, targetCell))
                 .toList();
 
-        List<Action> actions = new ArrayList<>();
+        ActionList actions = new ActionList();
 
         for (Cell movableCell : movableCells){
             actions.add(new BuildAction(worker, movableCell));
@@ -89,17 +88,6 @@ public class ClassicGameRule {
             }
         }
 
-//        // 2. Check if all opponent is lost
-//        for (Player player : opponent) {
-//            if (!player.isLose()){
-//                System.out.println("Still have player not lose");
-//                return false;
-//            }
-//        }
-//
-//        System.out.println("all opponent lose");
-//        currentPlayer.setWin(true);
-//        return true;
         return false;
     }
 

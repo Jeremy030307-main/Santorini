@@ -1,13 +1,12 @@
 package Controller.GameFlow;
 
 import Controller.HomeController;
-import Controller.SetupController;
+import Controller.SetupWorkerController;
 import Model.Board.Block;
 import Model.Board.Cell;
 import Model.Game.*;
-import Model.GodCard.GodCardFactory;
-import Model.Player.Player;
-import View.Game.GamePanel;
+import View.Game.BasicGameView.GamePanel;
+import View.Game.GenericGameView.GenericGamePanel;
 import View.Game.MapComponent.*;
 import View.SantoriniFrame;
 
@@ -18,35 +17,58 @@ public class GameController {
 
     public static final String GAME_VIEW = "gameView";
 
-    private final Game game;
-    private final GamePanel gamePanel;
+    private Game game;
+    private final GenericGamePanel gamePanel;
     private final SantoriniFrame mainFrame;
 
-    private final SetupController setupController;
-    private final TurnController turnController;
-    private final GameOverController gameOverController;
+    private SetupWorkerController setupController;
+    private TurnController turnController;
+    private GameOverController gameOverController;
 
     private int currentPlayerIndex;
 
-    public GameController(SantoriniFrame santoriniFrame, Game game, boolean[][] layout) {
+    private GameController(SantoriniFrame santoriniFrame, GenericGamePanel gamePanel) {
 
-        this.game = game;
-        List<JPlayer> displayPlayers = new ArrayList<>();
-        List<String> displayPlayerNames = new ArrayList<>();
-        List<String> displayGodCardsPath = new ArrayList<>();
-        for (Player player : game.getGameState().getPlayers()) {
-            displayPlayers.add(JPlayer.from(player.getWorkerColor().toString()));
-            displayPlayerNames.add(player.getName());
-            displayGodCardsPath.add(matchCardImage(player.getGodCard().getName()));
+        this.gamePanel = gamePanel;
+        this.mainFrame = santoriniFrame;
+    }
+
+    public static class Builder {
+
+        private final GameController gameController;
+
+        public Builder(SantoriniFrame mainFrame, GenericGamePanel gamePanel) {
+            gameController = new GameController(mainFrame, gamePanel);
         }
 
-        this.gamePanel = new GamePanel(displayPlayers, displayPlayerNames, displayGodCardsPath, layout);
-        this.mainFrame = santoriniFrame;
+        public Builder setGame(Game game) {
+            gameController.game = game;
+            return this;
+        }
 
-        this.setupController = new SetupController(this.game.getGameState().getSetupManager(), this.gamePanel, this);
-        this.turnController = new TurnController(this.game.getGameState().getTurnManager(), this.gamePanel, this);
-        this.gameOverController = new GameOverController(this.mainFrame);
-        initGame();
+        public Builder setSetupWorkerManager(SetupWorkerController setupWorkerController) {
+            gameController.setupController = setupWorkerController;
+            return this;
+        };
+
+        public Builder setTurnManager(TurnController turnController) {
+            gameController.turnController = turnController;
+            return this;
+        }
+
+        public Builder setGameOverController(GameOverController gameOverController) {
+            gameController.gameOverController = gameOverController;
+            return this;
+        }
+
+        public GameController build() {
+            gameController.initGame();
+            return gameController;
+        }
+
+        public GameController getGameController() {
+            return gameController;
+        }
     }
 
     public void setupGame(){
@@ -57,6 +79,7 @@ public class GameController {
     }
 
     public void startGame(){
+        game.getGameState().process();
         turnController.processTurn(game.getGameState());
         return;
     }
@@ -100,25 +123,9 @@ public class GameController {
         return game;
     }
 
-    public int getCurrentPlayerIndex() {
-        return currentPlayerIndex;
-    }
-
     public void setCurrentPlayerIndex(int currentPlayerIndex) {
         this.currentPlayerIndex = currentPlayerIndex;
     }
 
-    private String matchCardImage(GodCardFactory god){
-
-        switch (god){
-            case ARTEMIS -> {
-                return "/Image/GodCard/Artemis/podium.png";
-            }
-            case DEMETER -> {
-                return "/Image/GodCard/Demeter/podium.png";
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + god);
-        }
-    }
 }
 

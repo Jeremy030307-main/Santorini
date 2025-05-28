@@ -5,7 +5,8 @@ import Model.Board.Cell;
 import Model.Board.Position;
 import Model.Game.SetupManager;
 import Model.Player.Worker;
-import View.Game.GamePanel;
+import View.Game.BasicGameView.GamePanel;
+import View.Game.GenericGameView.GenericGamePanel;
 import View.Game.MapComponent.JBoard;
 import View.Game.MapComponent.JCell;
 import View.Game.MapComponent.JCellAction;
@@ -20,11 +21,11 @@ import java.util.Map;
 public class SetupWorkerController {
 
     private final SetupManager setupManager;
-    private final GamePanel gamePanel;
+    private final GenericGamePanel gamePanel;
     private final GameController gameController;
     private final Map<JCell, MouseListener> attachedListeners = new HashMap<>();
 
-    public SetupWorkerController(SetupManager setupManager, GamePanel gamePanel, GameController gameController) {
+    public SetupWorkerController(SetupManager setupManager, GenericGamePanel gamePanel, GameController gameController) {
         this.setupManager = setupManager;
         this.gamePanel = gamePanel;
         this.gameController = gameController;
@@ -38,6 +39,7 @@ public class SetupWorkerController {
         }
 
         gameController.setCurrentPlayerIndex(setupManager.getCurrentPlayer().getId());
+
         gameController.updateGamePanel(gameController.getGame().getGameState(), SetupManager.ADD_WORKER_TEXT);
         updateUIForCurrentPhase();
     }

@@ -1,9 +1,8 @@
 package Controller;
 
 import Controller.GameFlow.GameController;
-import Model.Board.Board;
+import Controller.GameFlow.GameDirector;
 import Model.Game.*;
-import Model.GameRule.ClassicGameRule;
 import Model.GodCard.GodCardFactory;
 import Model.Player.Player;
 import Model.Player.WorkerColor;
@@ -29,11 +28,6 @@ public class SetupController {
     private boolean[] playerSelecting;
     private int currentPlayerIndex;
 
-    private Board board;
-    private ClassicGameRule gameRule;
-    private BlockPool blockPool;
-    private SetupManager setupManager;
-    private TurnManager turnManager;
     private boolean[][] layout;
 
     private final List<GodCardFactory> allGods;
@@ -66,8 +60,6 @@ public class SetupController {
         currentPlayerIndex = 0;
 
         this.allGods = GodCardFactory.getAllGods();
-        this.gameRule = new ClassicGameRule();
-        this.turnManager = new TurnManager(players);
         this.layout = new boolean[][]{
                 {true, true, true, true, true},
                 {true, true, true, true, true},
@@ -75,10 +67,6 @@ public class SetupController {
                 {true, true, true, true, true},
                 {true, true, true, true, true}
         };
-        this.board = new Board(layout);
-        this.setupManager = new SetupManager(players, board);
-        this.blockPool = new BlockPool();
-
 
         setupLobby = new SetupLobby();
         chooseGodPanel = new ChooseGodPanel(allGods.stream().map(GodCardFactory::getName).collect(Collectors.toList()));
@@ -163,8 +151,8 @@ public class SetupController {
             for (int i = 0; i < players.length; i++) {
                 players[i].setGodCard(allGods.get(playerSelectedGods[i]).getConstructor().get());
             }
-            Game game = new Game(board, players, gameRule, blockPool, turnManager, setupManager);
-            GameController gameController = new GameController(santoriniFrame, game, layout);
+
+            GameController gameController = GameDirector.constructTimedGame(santoriniFrame, players, layout, new BlockPool());
             gameController.setupGame();
         });
     }

@@ -1,32 +1,30 @@
 package Controller.GameFlow;
 
 import Model.Action.Action;
+import Model.Action.ActionList;
+import Model.Action.OptionalAction;
 import Model.Board.Position;
 import Model.Game.GameState;
-import Model.Game.TurnManager;
+import Model.Game.TurnManager.TurnManager;
 import Model.Player.Worker;
-import View.Game.GamePanel;
+import View.Game.BasicGameView.GamePanel;
+import View.Game.GenericGameView.GenericGamePanel;
 import View.Game.MapComponent.JCell;
 import View.Game.MapComponent.JCellAction;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class TurnController {
+public class TurnController<T extends TurnManager> {
 
-    private final TurnManager turnManager;
-    private final GamePanel gamePanel;
-    private final GameController gameController;
-    private final Map<JCell, MouseListener> attachedListeners = new HashMap<>();
-    private ActionListener endTurnListener;
+    protected final TurnManager turnManager;
+    protected final GenericGamePanel gamePanel;
+    protected final GameController gameController;
+    protected final Map<JCell, MouseListener> attachedListeners = new HashMap<>();
 
-    public TurnController(TurnManager turnManager, GamePanel gamePanel, GameController gameController) {
+    public TurnController(T turnManager, GenericGamePanel gamePanel, GameController gameController) {
         this.turnManager = turnManager;
         this.gamePanel = gamePanel;
         this.gameController = gameController;
@@ -35,6 +33,7 @@ public class TurnController {
     public void processTurn(GameState gameState) {
 
         if (gameState.isGameOver()) {
+            System.out.println("Game Over");
             gameController.gameOver();  // handle over for game controller to control the game over
             return;
         }
@@ -47,30 +46,34 @@ public class TurnController {
     private void updateUIForCurrentPhase(GameState gameState) {
         switch (turnManager.getPhase()) {
             case START_TURN:
-                turnManager.onStartTurn();
-                processTurn(gameState);
+                startTurn(gameState);
                 break;
             case SELECT_WORKER:
                 showWorkerSelection(turnManager.getCurrentPlayer().getWorkers(), gameState);
                 break;
             case MOVE:
-                showWorkerSelection(turnManager.getUnselectedWorker(), gameState);
-                showWorkerAction(turnManager.getMoveActions(gameState), gameState, JCellAction.MOVE);
+//                showWorkerSelection(turnManager.getUnselectedWorker(), gameState);
+
+                ActionList moveActions = turnManager.getMoveActions(gameState);
+                showWorkerAction(moveActions, gameState, JCellAction.MOVE);
+                showOptionalButton(moveActions.getOptionalAction(), gameState);
                 break;
+
             case BUILD:
-                showWorkerAction(turnManager.getBuildActions(gameState), gameState, JCellAction.BUILD);
+                ActionList buildActions = turnManager.getBuildActions(gameState);
+                showWorkerAction(buildActions, gameState, JCellAction.BUILD);
+                showOptionalButton(buildActions.getOptionalAction(), gameState);
                 break;
             case MOVE_OR_BUILD:
                 break;
             case OPTIONAL_ACTION:
-                List<Action> optionalActions = turnManager.getOptionalActions(gameState);
-                Action endTurnAction = optionalActions.removeLast();
+                ActionList optionalActions = turnManager.getOptionalActions(gameState);
                 if (!optionalActions.isEmpty()) {
                     gameController.updateGamePanel(gameController.getGame().getGameState(), turnManager.getPhase().getPhaseText() + ": " +optionalActions.getFirst().getCurrentPhase().getPhaseText());
                     showWorkerAction(optionalActions, gameState, JCellAction.USE_POWER);
-                    showEndTurnAction(endTurnAction,  gameState);
+                    showOptionalButton(optionalActions.getOptionalAction(),  gameState);
                 } else {
-                    turnManager.handleAction(endTurnAction, gameState);
+                    turnManager.handleAction(optionalActions.getOptionalAction(), gameState);
                     processTurn(gameState);
                 }
                 break;
@@ -79,6 +82,11 @@ public class TurnController {
                 processTurn(gameState);
                 break;
         }
+    }
+
+    protected void startTurn(GameState gameState) {
+        turnManager.onStartTurn();
+        processTurn(gameState);
     }
 
     private void showWorkerSelection(Worker[] workers, GameState gameState) {
@@ -99,7 +107,7 @@ public class TurnController {
         }
     }
 
-    private void showWorkerAction(List<Action> actions, GameState gameState, JCellAction cellAction) {
+    private void showWorkerAction(ActionList actions, GameState gameState, JCellAction cellAction) {
         for (Action action : actions) {
 
             Position currPos = action.getTargetCell().getPosition();
@@ -117,17 +125,23 @@ public class TurnController {
         }
     }
 
-    private void showEndTurnAction(Action action, GameState gameState) {
-        JButton endTurnButton = gamePanel.getEndTurnButon(turnManager.getCurrentPlayer().getId());
+    private void showOptionalButton(OptionalAction action, GameState gameState) {
 
-        endTurnListener = e -> {
-            turnManager.handleAction(action, gameState);
-            clearListeners();
-            endTurnButton.removeActionListener(endTurnListener);
-            processTurn(gameState);
-        };
+        if (action != null) {
+            ActionListener optionalButtonListener = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    turnManager.handleAction(action, gameState);
+                    clearListeners();
+                    processTurn(gameState);
+                    ((JButton) e.getSource()).removeActionListener(this);
+                }
+            };
 
-        endTurnButton.addActionListener(endTurnListener);
+            gamePanel.setPlayerOptionalButton(turnManager.getCurrentPlayer().getId(),
+                    action.getActionName(),
+                    optionalButtonListener);
+        }
     }
 
     private void addListener(JCell cellDisplay,  MouseListener listener){

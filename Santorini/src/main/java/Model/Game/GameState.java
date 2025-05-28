@@ -1,7 +1,8 @@
 package Model.Game;
 
-import Model.Action.Action;
+import Model.Action.ActionList;
 import Model.Board.Board;
+import Model.Game.TurnManager.TurnManager;
 import Model.GameRule.ClassicGameRule;
 import Model.Player.Player;
 import Model.Player.Worker;
@@ -57,11 +58,11 @@ public class GameState {
         this.gameOver = false;
     }
 
-    public List<Action> getMovesAction(Worker worker) {
+    public ActionList getMovesAction(Worker worker) {
         return gameRule.moveActions(board, worker);
     }
 
-    public List<Action> getBuildAction(Worker worker) {
+    public ActionList getBuildAction(Worker worker) {
         return gameRule.buildActions(board, worker);
     }
 

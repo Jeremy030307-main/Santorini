@@ -1,7 +1,8 @@
 package Model.GodCard;
 
 import Model.Action.Action;
-import Model.Action.DoNothingAction;
+import Model.Action.ActionList;
+import Model.Action.OptionalAction;
 import Model.Board.Cell;
 import Model.Game.GameState;
 import Model.Game.TurnPhase;
@@ -14,7 +15,7 @@ import java.util.List;
  * This god card allows a player to move a worker one additional time during their turn,
  * with the restriction that the worker cannot move back to its initial position.
  * <p>
- * The class extends {@link GodCard} and overrides the {@link GodCard#beforeMove(List)} method
+ * The class extends {@link GodCard} and overrides the {@link GodCard#beforeMove(ActionList)} method
  * to implement the additional move feature and to filter out moves that would return the worker to
  * its original position.
  * </p>
@@ -29,7 +30,7 @@ public class Artemis extends GodCard {
      * but prevents the worker from moving back to its original position.
      */
     public Artemis() {
-        super(GodCardFactory.ARTEMIS, "Your Worker may move one additional time, but not back to its initial space.", null);
+        super(GodCardFactory.ARTEMIS, "Your Move", "Your Worker may move one additional time, but not back to its initial space.", null);
     }
 
     /**
@@ -41,7 +42,7 @@ public class Artemis extends GodCard {
      * @return A filtered list of valid move actions, excluding moves that would return the worker to its original position
      */
     @Override
-    public List<Action> beforeMove(List<Action> moveActions) {
+    public ActionList beforeMove(ActionList moveActions) {
 
         for (Action action : moveActions) {
             action.setNextPhase(TurnPhase.OPTIONAL_ACTION);
@@ -52,14 +53,15 @@ public class Artemis extends GodCard {
     }
 
     @Override
-    public List<Action> getOptionalActions(GameState gameState, Worker currentWorker) {
+    public ActionList getOptionalActions(GameState gameState, Worker currentWorker) {
 
-        List<Action> actions = new java.util.ArrayList<>(gameState.getGameRule().moveActions(gameState.getBoard(), currentWorker)
-                .stream().filter(action -> !action.getTargetCell().getPosition().equals(originalPosition.getPosition())).toList());
+        ActionList moveActions = gameState.getGameRule().moveActions(gameState.getBoard(), currentWorker);
+        ActionList actions = gameState.getGameRule().moveActions(gameState.getBoard(), currentWorker)
+                .filter(action -> !action.getTargetCell().getPosition().equals(originalPosition.getPosition()));
 
-        DoNothingAction doNothingAction = new DoNothingAction(gameState.getTurnManager().getCurrentWorker(), TurnPhase.BUILD);
+        OptionalAction doNothingAction = new OptionalAction("End Turn", "Skip this optional action",gameState.getTurnManager().getCurrentWorker(), TurnPhase.BUILD);
+        actions.setOptionalAction(doNothingAction);
 
-        actions.add(doNothingAction);
 
         return actions;
     }

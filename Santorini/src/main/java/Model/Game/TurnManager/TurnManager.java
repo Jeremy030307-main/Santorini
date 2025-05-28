@@ -1,8 +1,9 @@
-package Model.Game;
+package Model.Game.TurnManager;
 
 import Model.Action.Action;
-import Model.Action.BuildAction;
-import Model.Action.MoveAction;
+import Model.Action.ActionList;
+import Model.Game.GameState;
+import Model.Game.TurnPhase;
 import Model.Player.Player;
 import Model.Player.Worker;
 
@@ -37,28 +38,20 @@ public class TurnManager {
         return;
     }
 
-    public List<Action> getMoveActions(GameState gameState){
-        List<Action> moveActions = gameState.getMovesAction(getCurrentPlayer().getWorkerByID(playerSelectedWorkerID));
+    public ActionList getMoveActions(GameState gameState){
+        ActionList moveActions = gameState.getMovesAction(getCurrentPlayer().getWorkerByID(playerSelectedWorkerID));
 
         moveActions = getCurrentPlayer().getGodCard().beforeMove(moveActions);
 ;        
         return moveActions;
     };
 
-    public List<Action> getBuildActions(GameState gameState){
-        List<Action> buildActions = gameState.getBuildAction(getCurrentPlayer().getWorkerByID(playerSelectedWorkerID));
+    public ActionList getBuildActions(GameState gameState){
+        ActionList buildActions = gameState.getBuildAction(getCurrentPlayer().getWorkerByID(playerSelectedWorkerID));
 
         buildActions = getCurrentPlayer().getGodCard().beforeBuild(buildActions);
         return buildActions;
     };
-
-    public List<Action> getMoveBuildActions(GameState gameState){
-        List<Action> moveActions = gameState.getMovesAction(getCurrentPlayer().getWorkerByID(playerSelectedWorkerID));
-        List<Action> buildActions = gameState.getBuildAction(getCurrentPlayer().getWorkerByID(playerSelectedWorkerID));
-        List<Action> moveBuildActions = new ArrayList<>(moveActions);
-        moveBuildActions.addAll(buildActions);
-        return moveBuildActions;
-    }
 
     /**
      * Retrieves any optional actions that can be performed by the current player.
@@ -66,22 +59,21 @@ public class TurnManager {
      *
      * @param gameState The current game state to evaluate optional actions
      */
-    public List<Action> getOptionalActions(GameState gameState) {
+    public ActionList getOptionalActions(GameState gameState) {
         return getCurrentPlayer().getGodCard().getOptionalActions(gameState, getCurrentWorker());  // last one is a do nothing action
-
     }
 
     public void handleAction(Action action, GameState gameState){
         action.execute(gameState);
         phase = action.getNextPhase();
 
-        if (action instanceof MoveAction moveAction) {
+        if (action.getCurrentPhase() == TurnPhase.MOVE) {
             getCurrentPlayer().getGodCard().afterMove(action, gameState);
 
             for (Player player : getOpponents(getCurrentPlayer())) {
                 player.getGodCard().afterOpponentMove(action, gameState);
             }
-        } else if (action instanceof BuildAction buildAction) {
+        } else if (action.getCurrentPhase() == TurnPhase.BUILD) {
             getCurrentPlayer().getGodCard().afterBuild(action, gameState);
 
             for (Player player : getOpponents(getCurrentPlayer())) {
@@ -92,7 +84,6 @@ public class TurnManager {
         gameState.process();
     }
 
-
     public void onEndTurn(){
         currentPlayerIndex ++;
 
@@ -102,6 +93,8 @@ public class TurnManager {
         playerSelectedWorkerID = null;
         phase = TurnPhase.START_TURN;
     }
+
+    // ==== Getter ====
 
     public TurnPhase getPhase() {
         return phase;
@@ -142,7 +135,4 @@ public class TurnManager {
         return opponents.toArray(new Player[0]);
     }
 
-    public void setCurrentPlayerIndex(int currentPlayerIndex) {
-        this.currentPlayerIndex = currentPlayerIndex;
-    }
 }

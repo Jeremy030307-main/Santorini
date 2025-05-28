@@ -1,6 +1,7 @@
 package Model.GodCard;
 
 import Model.Action.Action;
+import Model.Action.ActionList;
 import Model.Game.GameState;
 import Model.Player.Player;
 import Model.Player.Worker;
@@ -11,10 +12,12 @@ public abstract class GodCard {
 
     protected final GodCardFactory godName;
     protected final String description;
+    protected final String timing;
     protected Player player;
 
-    public GodCard(GodCardFactory godName, String description, Player player) {
+    public GodCard(GodCardFactory godName, String timing, String description, Player player) {
         this.godName = godName;
+        this.timing = timing;
         this.description = description;
         this.player = player;
     }
@@ -22,28 +25,28 @@ public abstract class GodCard {
     public void onSetup(){
     };
 
-    public List<Action> beforeMove(List<Action> moveActions){
+    public ActionList beforeMove(ActionList moveActions){
         return moveActions;
     };
 
     public void afterMove(Action moveAction, GameState gameState){
     };
 
-    public List<Action> beforeBuild(List<Action> buildActions) {
+    public ActionList beforeBuild(ActionList buildActions) {
         return buildActions;
     };
 
     public void afterBuild(Action buildAction, GameState gameState) {};
 
-    public List<Action> getOptionalActions(GameState gameState, Worker currentWorker) {return null;};
+    public ActionList getOptionalActions(GameState gameState, Worker currentWorker) {return null;};
 
-    public void beforeOpponentMove(List<Action> moveActions){
+    public void beforeOpponentMove(ActionList moveActions){
     };
 
     public void afterOpponentMove(Action moveAction, GameState gameState){
     };
 
-    public void beforeOpponentBuild(List<Action> buildActions) {
+    public void beforeOpponentBuild(ActionList buildActions) {
     };
 
     public void afterOpponentBuild(Action buildAction, GameState gameState) {}
