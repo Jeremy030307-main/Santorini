@@ -13,17 +13,17 @@ public enum JPlayer {
     /**
      * Represents the orange player color, associated with the image at the specified path.
      */
-    ORANGE("/Image/Worker/Orange/tag.png"),
+    ORANGE("Orange"),
     /**
      * Represents the red player color, associated with the image at the specified path.
      */
-    RED("/Image/Worker/Red/tag.png"),
+    RED("Red"),
     /**
      * Represents the purple player color, associated with the image at the specified path.
      */
-    PURPLE("/Image/Worker/Purple/tag.png");
+    PURPLE("Purple");
 
-    private final String tagPath;
+    private final String color;
 
     /**
      * Constructs a new {@code JPlayer} with the specified image path.
@@ -31,7 +31,7 @@ public enum JPlayer {
      * @param path The path to the image associated with the player color
      */
     JPlayer(String path) {
-        this.tagPath = path;
+        this.color = path;
     }
 
     /**
@@ -39,8 +39,8 @@ public enum JPlayer {
      *
      * @return The image path of the player color
      */
-    public String getTagPath() {
-        return tagPath;
+    public String getColor() {
+        return color;
     }
     /**
      * Retrieves the {@code JPlayer} corresponding to the specified color.

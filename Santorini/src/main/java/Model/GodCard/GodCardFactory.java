@@ -5,16 +5,17 @@ import java.util.function.Supplier;
 
 public enum GodCardFactory {
     ARTEMIS(Artemis ::new),
-    DEMETER(Demeter ::new),;
+    DEMETER(Demeter ::new),
+    PROMETHEUS(Prometheus ::new),
+
+    ;
 
     private final Supplier<GodCard> godConstructor;
     private final String description;
 
     GodCardFactory(Supplier<GodCard> godConstructor){
         this.godConstructor = godConstructor;
-
-        GodCard godCard = this.godConstructor.get();
-        this.description = godCard.getDescription();
+        this.description = this.godConstructor.get().getDescription();
     }
 
     public static List<GodCardFactory> getAllGods() {

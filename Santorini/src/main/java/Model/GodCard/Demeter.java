@@ -1,12 +1,14 @@
 package Model.GodCard;
 
 import Model.Action.Action;
-import Model.Action.DoNothingAction;
+import Model.Action.ActionList;
+import Model.Action.OptionalAction;
 import Model.Board.Cell;
 import Model.Game.GameState;
 import Model.Game.TurnPhase;
 import Model.Player.Worker;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +16,7 @@ import java.util.List;
  * This god card allows a player to build one additional time during their turn,
  * with the restriction that the worker cannot build on the same space as the first build.
  * <p>
- * The class extends {@link GodCard} and overrides the {@link GodCard#beforeBuild(List)} method
+ * The class extends {@link GodCard} and overrides the {@link GodCard#beforeBuild(ActionList)} method
  * to implement the additional build feature and to filter out builds on the same cell as the first build.
  * </p>
  */
@@ -28,7 +30,7 @@ public class Demeter extends GodCard {
      * but prevents the worker from building on the same space as the first build.
      */
     public Demeter() {
-        super(GodCardFactory.DEMETER, "Your Worker may build one additional time, but not on the same space.", null);
+        super(GodCardFactory.DEMETER, "Your Build", "Your Worker may build one additional time, but not on the same space.", null);
     }
 
     /**
@@ -40,7 +42,7 @@ public class Demeter extends GodCard {
      * @return A filtered list of valid build actions, excluding builds on the same cell as the first build
      */
     @Override
-    public List<Action> beforeBuild(List<Action> buildActions) {
+    public ActionList beforeBuild(ActionList buildActions) {
         for (Action action: buildActions){
             action.setNextPhase(TurnPhase.OPTIONAL_ACTION);
         }
@@ -54,14 +56,16 @@ public class Demeter extends GodCard {
     }
 
     @Override
-    public List<Action> getOptionalActions(GameState gameState, Worker currentWorker) {
-        List<Action> actions = new java.util.ArrayList<>(gameState.getGameRule().buildActions(gameState.getBoard(), currentWorker)
-                .stream().filter(action -> !action.getTargetCell().getPosition().equals(firstBuildCell.getPosition())).toList());
+    public ActionList getOptionalActions(GameState gameState, Worker currentWorker) {
 
-        DoNothingAction doNothingAction = new DoNothingAction(currentWorker, TurnPhase.END_TURN);
+        ActionList buildActions = gameState.getGameRule().buildActions(gameState.getBoard(), currentWorker);
+        ActionList filtered = buildActions.filter(action ->
+                !action.getTargetCell().getPosition().equals(firstBuildCell.getPosition())
+        );
 
-        actions.add(doNothingAction);
+        OptionalAction doNothingAction = new OptionalAction("End Turn", "Skip this optional action",currentWorker, TurnPhase.END_TURN);
+        filtered.setOptionalAction(doNothingAction);
 
-        return actions;
+        return filtered;
     }
 }
