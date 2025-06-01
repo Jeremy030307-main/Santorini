@@ -59,13 +59,16 @@ public class Demeter extends GodCard {
     public ActionList getOptionalActions(GameState gameState, Worker currentWorker) {
 
         ActionList buildActions = gameState.getGameRule().buildActions(gameState.getBoard(), currentWorker);
-        ActionList filtered = buildActions.filter(action ->
-                !action.getTargetCell().getPosition().equals(firstBuildCell.getPosition())
-        );
 
-        OptionalAction doNothingAction = new OptionalAction("End Turn", "Skip this optional action",currentWorker, TurnPhase.END_TURN);
-        filtered.setOptionalAction(doNothingAction);
+        for (Action action : buildActions) {
+            if (action.getTargetCell().getPosition().equals(firstBuildCell.getPosition())) {
+                action.deactivate("Demeter Power: Worker extra build cannot build on the same space.");
+            }
+        }
 
-        return filtered;
+        OptionalAction doNothingAction = new OptionalAction("End Turn", "Skip this optional action",buildActions.getFirst().getTargetWorker(), TurnPhase.END_TURN);
+        buildActions.setOptionalAction(doNothingAction);
+
+        return buildActions;
     }
 }
