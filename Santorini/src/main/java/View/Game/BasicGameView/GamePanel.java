@@ -1,11 +1,13 @@
 package View.Game.BasicGameView;
 
 import View.Game.GenericGameView.GenericGamePanel;
+import View.Game.MapComponent.JBlock;
 import View.Game.MapComponent.JPlayer;
 import View.SantoriniPanel;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -29,8 +31,12 @@ public class GamePanel extends GenericGamePanel<PlayerSidePanel> {
      * @param playerGodCardsImgPaths
      * @param cellLayout
      */
-    public GamePanel(List<JPlayer> players, List<String> playerNames, List<String> playerGodCardsImgPaths, boolean[][] cellLayout) {
-        super(players, playerNames, playerGodCardsImgPaths, cellLayout);
+    public GamePanel(List<JPlayer> players, List<String> playerNames, List<String> playerGodCardsImgPaths, boolean[][] cellLayout, HashMap<JBlock, Integer> blockPool) {
+        super(players, playerNames, playerGodCardsImgPaths, cellLayout, blockPool);
+        createGameBoard(getMaxWidth(), getMaxHeight());
+        createPlayerPanels(playerNames, playerGodCardsImgPaths);
+        createQuitButton();
+        createBlockPoolPanel(blockPool);
     }
 
     @Override

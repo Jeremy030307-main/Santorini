@@ -16,21 +16,19 @@ public class Board {
     /** The fixed size of the board (5x5). */
     private static final int SIZE = 5;
 
-    private final int width;
-    private final int height;
-    private final Cell[][] cells;
+    protected final Cell[][] cells;
     /** Two-dimensional array of cells on the board. */
 
     /**
      * Constructs a new 5x5 Santorini board, initializing all cells.
      */
     public Board(boolean[][] cellLayout) {
-        this.height = cellLayout.length;
+        int height = cellLayout.length;
         int tmp = 0;
         for (boolean[] row : cellLayout) {
             tmp = Math.max(tmp, row.length); // account for jagged arrays
         }
-        this.width = tmp;
+        int width = tmp;
 
         cells = new Cell[width][height];
 

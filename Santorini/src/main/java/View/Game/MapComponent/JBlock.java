@@ -13,22 +13,24 @@ public enum JBlock {
     /**
      * Represents the bottom level block, associated with the image at the specified path.
      */
-    BOTTOM("/Image/Cell/Block/bottom.png", 1),
+    BOTTOM("Cell/Block/bottom.png", 1),
 
     /**
      * Represents the middle level block, associated with the image at the specified path.
      */
-    MIDDLE("/Image/Cell/Block/middle.png", 2),
+    MIDDLE("Cell/Block/middle.png", 2),
 
     /**
      * Represents the top level block, associated with the image at the specified path.
      */
-    TOP("/Image/Cell/Block/top.png", 3),
+    TOP("Cell/Block/top.png", 3),
 
     /**
      * Represents the dome block, associated with the image at the specified path.
      */
-    DOME("/Image/Cell/Block/dome.png", 4);
+    DOME("Cell/Block/dome.png", 4),
+
+    COIN("Cell/coin.png", -1),;
 
     public final String path;
     public final int level;

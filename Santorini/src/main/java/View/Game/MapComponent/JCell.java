@@ -1,5 +1,7 @@
 package View.Game.MapComponent;
 
+import View.ViewHelper;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -19,16 +21,16 @@ import java.util.Objects;
  */
 public class JCell extends JButton {
 
-    private int row;
-    private int col;
-
     private List<JBlock> blocks;
     private JWorker worker;
     private JCellAction action;
 
+    private boolean disabled = false;
+    private String disabledText = "";
+    private static final String LOCK_ICON_PATH = "Cell/lock.png";
+
     private Image backgroundImage; // Background image
     private Color borderColor = null;
-
 
     /**
      * Constructs a new {@code JCell} with the specified row and column coordinates.
@@ -38,8 +40,6 @@ public class JCell extends JButton {
      * @param col The column index of the cell
      */
     public JCell(int row, int col) {
-        this.row = row;
-        this.col = col;
         this.blocks = new ArrayList<>();
 
         setFocusPainted(false);
@@ -79,7 +79,7 @@ public class JCell extends JButton {
 
         // Draw blocks
         for (JBlock block : blocks) {
-            Image img = new ImageIcon(Objects.requireNonNull(getClass().getResource(block.getPath()))).getImage();
+            Image img = ViewHelper.loadImageIcon(block.getPath(), getWidth(), getHeight()).getImage();
             g2d.drawImage(img, 0, 0, getWidth(), getHeight(), this);
         }
 
@@ -95,6 +95,16 @@ public class JCell extends JButton {
             g2d.drawImage(img1, 0, 0, getWidth(), getHeight(), this);
         }
 
+        // === DRAW LOCK OVERLAY IF DISABLED ===
+        if (disabled) {
+            ImageIcon lockIcon = ViewHelper.loadImageIcon(LOCK_ICON_PATH, getWidth() / 3, getHeight() / 3);
+            if (lockIcon != null) {
+                int x = (getWidth() - lockIcon.getIconWidth()) / 2;
+                int y = (getHeight() - lockIcon.getIconHeight()) / 2;
+                g2d.drawImage(lockIcon.getImage(), x, y, this);
+            }
+        }
+
         // Draw border manually
         if (borderColor != null) {
             g2d.setColor(borderColor);
@@ -106,6 +116,23 @@ public class JCell extends JButton {
         super.paintComponent(g);
 
 
+    }
+
+    public void deactivate(String reason) {
+        this.disabled = true;
+        this.disabledText = reason;
+        setToolTipText(reason);
+        repaint();
+    }
+
+    public void activate(){
+        this.disabled = false;
+        setToolTipText(null);
+        repaint();
+    }
+
+    public boolean isDisabled() {
+        return disabled;
     }
 
     /**

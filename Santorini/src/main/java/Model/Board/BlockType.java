@@ -1,5 +1,7 @@
 package Model.Board;
 
+import java.util.Arrays;
+
 /**
  * The {@code BlockType} enum defines the types of building blocks
  * used in the Santorini game: LEVEL1, LEVEL2, LEVEL3, and DOME.
@@ -85,5 +87,11 @@ public enum BlockType {
             case LEVEL3 -> DOME;
             case DOME -> throw new IllegalStateException("Dome cannot be stacked upon");
         };
+    }
+
+    public static BlockType[] getValuesInAscendingOrder() {
+        return Arrays.stream(values())
+                .sorted((a, b) -> Integer.compare(a.level, b.level))
+                .toArray(BlockType[]::new);
     }
 }

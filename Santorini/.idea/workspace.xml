@@ -9,58 +9,61 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96d5919f-5a77-4910-bc19-872b137b293a" name="Changes" comment="Improve on the god selection flow during the game setup process">
-      <change afterPath="$PROJECT_DIR$/src/main/java/Controller/GameFlow/GameDirector.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Controller/GameFlow/TimedTurnController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Action/ActionList.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Game/TurnManager/EventBasedTurnManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Model/GodCard/Prometheus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Mode/TimedMode/PlayerClock.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Mode/TimedMode/TimedGameRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Mode/TimedMode/TimedTurnManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/View/Game/BasicGameView/ActivePlayerPanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/View/Game/BasicGameView/PlayerSidePanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/View/Game/GenericGameView/GenericGamePanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/View/Game/GenericGameView/GenericPlayerSidePanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/View/Game/TimedGameView/TimedGamePanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/View/Game/TimedGameView/TimedPlayerPanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/View/Game/TimedGameView/TimedPlayerSidePanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/GodCard/Prometheus/card.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/GodCard/Prometheus/image.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/GodCard/Prometheus/podium.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/GodCard/Prometheus/power.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/Label/action_message.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/Worker/Blue/btn.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/Worker/Blue/btn_pressed.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/Worker/Orange/btn.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/Worker/Orange/btn_pressed.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/Worker/Purple/btn.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/Worker/Purple/btn_pressed.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="96d5919f-5a77-4910-bc19-872b137b293a" name="Changes" comment="Implement the timer extension, with file adding in model, view and controller folder">
+      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Action/SequenceAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Mode/CoinMode/CoinGameRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Mode/CoinMode/CoinManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Mode/CoinMode/CollectCoinAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Mode/CoinMode/SpendCoinAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Mode/TimedMode/TimerManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/View/Game/BasicGameView/BlockPoolSidePanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/View/Game/CoinGameView/CoinBlockPoolSidePanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/View/Game/CoinGameView/CoinGamePanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/View/Game/CoinGameView/CoinPlayerPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/View/Game/CoinGameView/CoinPlayerSidePanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/View/Setup/ChooseModePanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/Button/classic_mode_btn.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/Button/timer_mode_btn.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/Button/wealth_mode_btn.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/Cell/coin.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/Cell/lock.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Image/Label/block_pool.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Controller/GameFlow/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Controller/GameFlow/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Controller/GameFlow/GameDirector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Controller/GameFlow/GameDirector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Controller/GameFlow/GameOverController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Controller/GameFlow/GameOverController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Controller/GameFlow/TimedTurnController.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Controller/GameFlow/TurnController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Controller/GameFlow/TurnController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Controller/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Controller/HomeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Controller/PlayerChooseGodController.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Controller/SetupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Controller/SetupController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Controller/SetupWorkerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Controller/SetupWorkerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Action/DoNothingAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Action/OptionalAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Action/Action.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Action/Action.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Action/ActionList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Action/ActionList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Board/BlockType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Board/BlockType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Board/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Board/Board.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Model/Game/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Game/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Game/GameMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Mode/GameMode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Model/Game/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Game/GameState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Game/TurnManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Game/TurnManager/TurnManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Game/TurnManager/EventBasedTurnManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Game/TurnManager/TurnManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Game/TurnManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Game/TurnPhase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Game/TurnPhase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Model/GameRule/ClassicGameRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/GameRule/ClassicGameRule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Model/GodCard/Artemis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/GodCard/Artemis.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Model/GodCard/Demeter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/GodCard/Demeter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Model/GodCard/GodCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/GodCard/GodCard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Model/GodCard/GodCardFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/GodCard/GodCardFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/View/Game/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/View/Game/BasicGameView/GamePanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/View/Game/MapComponent/JPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/View/Game/MapComponent/JPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/View/Game/PlayerPanel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/GodCard/Prometheus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/GodCard/Prometheus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Mode/TimedMode/PlayerClock.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Mode/TimedMode/TimedGameRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Mode/TimedMode/TimedGameRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Mode/TimedMode/TimedTurnManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/View/Game/BasicGameView/ActivePlayerPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/View/Game/BasicGameView/ActivePlayerPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/View/Game/BasicGameView/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/View/Game/BasicGameView/GamePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/View/Game/GenericGameView/GenericGamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/View/Game/GenericGameView/GenericGamePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/View/Game/MapComponent/JBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/View/Game/MapComponent/JBlock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/View/Game/MapComponent/JCell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/View/Game/MapComponent/JCell.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/View/Game/TimedGameView/TimedGamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/View/Game/TimedGameView/TimedGamePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/View/Game/TimedGameView/TimedPlayerPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/View/Game/TimedGameView/TimedPlayerPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/View/GameOver/WinPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/View/GameOver/WinPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/View/Setup/PlayerChooseGodsPanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Image/Button/choose_button.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Image/Button/choose_starter.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Image/Label/clouds.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Image/Label/clouds.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/View/Setup/SelectChallengerPanel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Image/Button/2_player_button.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Image/Button/3_player_button.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,9 +73,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Python Script" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -111,47 +114,47 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Example.executor&quot;: &quot;Run&quot;,
-    &quot;Application.GameRuleTest.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;JAR Application.Santorini.jar.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.preview.features.used&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/jeremyteng/Documents/Monash Software Engineering/Monash Y3S2/FIT3077/Sprint 3/Santorini/src/main/resources/Image/Worker/Blue&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;/Users/jeremyteng/Documents/Monash Software Engineering/Monash Y3S2/FIT3077/SantoriniProject/untitled/src/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Example.executor": "Run",
+    "Application.GameRuleTest.executor": "Run",
+    "Application.Main.executor": "Run",
+    "JAR Application.Santorini.jar.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "ignore.preview.features.used": "true",
+    "last_opened_file_path": "/Users/jeremyteng/Documents/Monash Software Engineering/Monash Y3S2/FIT3077/Sprint 3/Santorini/src/main/resources/Image/Label",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "/Users/jeremyteng/Documents/Monash Software Engineering/Monash Y3S2/FIT3077/SantoriniProject/untitled/src/Main.java",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.uml",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/main/resources/Image/Worker/Blue" />
       <recent name="$PROJECT_DIR$/src/main/resources/Image/Label" />
+      <recent name="$PROJECT_DIR$/src/main/resources/Image/Worker/Blue" />
       <recent name="$PROJECT_DIR$/src/main/resources/Image/GodCard/Prometheus" />
       <recent name="$PROJECT_DIR$/src/main/resources/Image/GodCard" />
       <recent name="$PROJECT_DIR$/src/main/resources/Image/Button" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/Image/Button" />
+      <recent name="$PROJECT_DIR$/src/main/resources/Image/Cell" />
       <recent name="$PROJECT_DIR$/src/main/resources/Image/Worker/Purple" />
       <recent name="$PROJECT_DIR$/src/main/resources/Image/Worker/Orange" />
       <recent name="$PROJECT_DIR$/src/main/resources/Image/Label" />
-      <recent name="$PROJECT_DIR$/src/main/resources/Image/Button" />
-      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunManager" selected="Application.Main">
@@ -233,7 +236,11 @@
       <workItem from="1747984294170" duration="88539000" />
       <workItem from="1748401360377" duration="2768000" />
       <workItem from="1748406167347" duration="8132000" />
-      <workItem from="1748418046623" duration="11820000" />
+      <workItem from="1748418046623" duration="16156000" />
+      <workItem from="1748482094812" duration="34037000" />
+      <workItem from="1748574064063" duration="97000" />
+      <workItem from="1748574899528" duration="28184000" />
+      <workItem from="1748618174417" duration="36468000" />
     </task>
     <task id="LOCAL-00001" summary="complete the setupmanager and part of the turn manager, add in some todo for team">
       <option name="closed" value="true" />
@@ -267,7 +274,23 @@
       <option name="project" value="LOCAL" />
       <updated>1748229069612</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Twist the action list to include a optional action at every turn and implement the prometheus god power">
+      <option name="closed" value="true" />
+      <created>1748430464797</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1748430464797</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Implement the timer extension, with file adding in model, view and controller folder">
+      <option name="closed" value="true" />
+      <created>1748430500206</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1748430500206</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -289,6 +312,12 @@
     <MESSAGE value="Merge TengKingCheng GUI to main" />
     <MESSAGE value="Build executable file" />
     <MESSAGE value="Improve on the god selection flow during the game setup process" />
-    <option name="LAST_COMMIT_MESSAGE" value="Improve on the god selection flow during the game setup process" />
+    <MESSAGE value="Twist the action list to include a optional action at every turn and implement the prometheus god power" />
+    <MESSAGE value="Implement the timer extension, with file adding in model, view and controller folder" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implement the timer extension, with file adding in model, view and controller folder" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

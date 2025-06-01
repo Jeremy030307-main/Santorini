@@ -1,7 +1,6 @@
 package Model.Game;
 
 import Model.Board.Board;
-import Model.Game.TurnManager.TurnManager;
 import Model.GameRule.ClassicGameRule;
 import Model.Player.Player;
 

@@ -1,6 +1,6 @@
 package Controller;
 
-import Model.Game.GameMode;
+import Model.Mode.GameMode;
 import View.Home.HomePanel;
 import View.SantoriniFrame;
 
@@ -26,7 +26,7 @@ public class HomeController {
     private void startNewGame() {
 //        GameBuilderController gameBuilderController = new GameBuilderController(mainFrame);
 //        gameBuilderController.challengerChooseGod();
-        SetupController setupController = new SetupController(mainFrame, GameMode.TWO_PLAYER);
+        SetupController setupController = new SetupController(mainFrame, GameMode.CLASSIC);
         setupController.start();
     }
 

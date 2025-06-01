@@ -2,6 +2,7 @@ package View.GameOver;
 
 import View.Game.MapComponent.JPlayer;
 import View.SantoriniPanel;
+import View.ViewHelper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,38 +18,30 @@ public class WinPanel extends SantoriniPanel {
     private JButton backButton;
     Font customFont = null;
 
-    public WinPanel(JPlayer jPlayer, String playerName, String godCardImage) {
+    public WinPanel(JPlayer jPlayer, String playerName, String godName) {
         super(imgPath);
 
         setLayout(null);
         setOpaque(false);
 
-        ImageIcon middleIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource(godCardImage)));
-        Image originalImage = middleIcon.getImage();
+        ImageIcon middleIcon = ViewHelper.loadImageIcon("GodCard/" + godName +"/podium.png", (int) (getMaxWidth() * 0.3), -1);
 
         // Calculate dimensions preserving aspect ratio
         double maxWidth = getMaxWidth() * 0.3; // Adjusted for reasonable god card size
-        double imgWidth = originalImage.getWidth(null);
-        double imgHeight = originalImage.getHeight(null);
-        double aspectRatio = imgWidth / imgHeight;
-
-        int targetWidth = (int) maxWidth;
-        int targetHeight = (int) (targetWidth / aspectRatio);
 
         // Scale the god card image
-        Image scaledImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
-        JLabel middleLabel = new JLabel(new ImageIcon(scaledImage));
+        JLabel middleLabel = new JLabel(middleIcon);
 
         // Center middleLabel
-        int middleX = (getMaxWidth() - targetWidth) / 2;
+        int middleX = (getMaxWidth() - middleIcon.getIconWidth()) / 2;
         int middleY = (int) (-getMaxHeight() * 0.12); // Adjust vertical positioning as needed
-        middleLabel.setBounds(middleX, middleY, targetWidth, targetHeight);
+        middleLabel.setBounds(middleX, middleY, middleIcon.getIconWidth(), middleIcon.getIconHeight());
 
         // Load and position baseLabel relative to middleLabel
         Image baseImage = loadImage("/Image/Label/chosen_player.png", getMaxHeight() * 0.4, getMaxHeight() * 0.15);
         baseLabel = new JLabel(new ImageIcon(baseImage));
         baseLabel.setBounds(
-                middleX + (targetWidth - baseImage.getWidth(null)) / 2,
+                middleX + (middleIcon.getIconWidth() - baseImage.getWidth(null)) / 2,
                 middleY + (int) (getMaxHeight() * 0.70), // below god card image
                 baseImage.getWidth(null),
                 baseImage.getHeight(null)
@@ -58,7 +51,7 @@ public class WinPanel extends SantoriniPanel {
         Image overlayImg = loadImage("/Image/Worker/"+ jPlayer.getColor() + "/tag.png", baseLabel.getWidth()-20, baseLabel.getHeight()-20);
         JLabel overlayLabel = new JLabel(new ImageIcon(overlayImg));
         overlayLabel.setBounds(
-                middleX + (targetWidth - baseImage.getWidth(null)) / 2,
+                middleX + (middleIcon.getIconWidth() - baseImage.getWidth(null)) / 2,
                 middleY + (int) (getMaxHeight() * 0.70), // below god card image
                 baseImage.getWidth(null),
                 baseImage.getHeight(null)
@@ -100,7 +93,7 @@ public class WinPanel extends SantoriniPanel {
         int buttonWidth = buttonImage.getWidth(null);
         int buttonHeight = buttonImage.getHeight(null);
         int buttonX = (getMaxWidth() - buttonWidth) / 2;
-        int buttonY = middleY + targetHeight + baseImage.getHeight(null) + 100;
+        int buttonY = middleY + middleIcon.getIconHeight() + baseImage.getHeight(null) + 100;
 
         backButton.setBounds(buttonX, buttonY, buttonWidth, buttonHeight);
 

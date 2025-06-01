@@ -26,15 +26,24 @@ public class Prometheus extends GodCard{
     @Override
     public ActionList beforeMove(ActionList moveActions) {
 
+        if (!actionSequence.isEmpty() && actionSequence.getLast().getCurrentPhase() == TurnPhase.MOVE){
+            actionSequence.clear();
+        }
+
         if (actionSequence.isEmpty()) {
             // this mean no before build action being taken
             moveActions.setOptionalAction(
                     new OptionalAction("Before Build", "Prometheus can build before move", moveActions.getFirst().getTargetWorker(), TurnPhase.OPTIONAL_ACTION));
             return moveActions;
         } else {
-            ActionList noMoveUp = moveActions.filter(action -> action.getTargetCell().getPosition().z() <= action.getTargetWorker().getLocatedCell().getPosition().z());
 
-            return noMoveUp;
+            for (Action action : moveActions) {
+                if (action.getTargetCell().getPosition().z() > action.getTargetWorker().getLocatedCell().getPosition().z()){
+                    action.deactivate("Prometheus power: Once build before move, worker cannot move up.");
+                }
+            }
+
+            return moveActions;
         }
     };
 
@@ -51,6 +60,8 @@ public class Prometheus extends GodCard{
         for (Action action : beforeBuilds) {
             action.setNextPhase(TurnPhase.MOVE);
         }
+
+        beforeBuilds.setOptionalAction(new OptionalAction("Skip Build", "", currentWorker, TurnPhase.MOVE));
         return beforeBuilds;
     }
 

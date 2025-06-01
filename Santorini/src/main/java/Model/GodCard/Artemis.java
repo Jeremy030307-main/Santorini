@@ -4,10 +4,12 @@ import Model.Action.Action;
 import Model.Action.ActionList;
 import Model.Action.OptionalAction;
 import Model.Board.Cell;
+import Model.Board.Position;
 import Model.Game.GameState;
 import Model.Game.TurnPhase;
 import Model.Player.Worker;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +25,7 @@ import java.util.List;
 public class Artemis extends GodCard {
 
     private Cell originalPosition; // Store initial position before first move
+    private List<Action> actions;
 
     /**
      * Constructs a new Artemis god card.
@@ -31,6 +34,8 @@ public class Artemis extends GodCard {
      */
     public Artemis() {
         super(GodCardFactory.ARTEMIS, "Your Move", "Your Worker may move one additional time, but not back to its initial space.", null);
+        originalPosition = null;
+        actions = new ArrayList<>();
     }
 
     /**
@@ -44,25 +49,46 @@ public class Artemis extends GodCard {
     @Override
     public ActionList beforeMove(ActionList moveActions) {
 
-        for (Action action : moveActions) {
-            action.setNextPhase(TurnPhase.OPTIONAL_ACTION);
-            originalPosition = action.getTargetWorker().getLocatedCell();
+        if (originalPosition == null) {
+            originalPosition = moveActions.getFirst().getTargetWorker().getLocatedCell();
+        } else {
+            // cannot move back to original position
+            for (Action action : moveActions) {
+                if (action.getTargetCell().getPosition().equals(originalPosition.getPosition())) {
+                    action.deactivate("Artemis Power: Worker extra move cannot back to its initial space.");
+                }
+            }
+            moveActions.setOptionalAction(new OptionalAction("Skip Move", "", moveActions.getFirst().getTargetWorker(), TurnPhase.BUILD));
         }
 
         return moveActions;
     }
 
     @Override
-    public ActionList getOptionalActions(GameState gameState, Worker currentWorker) {
+    public void afterMove(Action moveAction, GameState gameState) {
+        actions.add(moveAction);
+    }
 
-        ActionList moveActions = gameState.getGameRule().moveActions(gameState.getBoard(), currentWorker);
-        ActionList actions = gameState.getGameRule().moveActions(gameState.getBoard(), currentWorker)
-                .filter(action -> !action.getTargetCell().getPosition().equals(originalPosition.getPosition()));
+    @Override
+    public ActionList beforeBuild(ActionList buildActions) {
 
-        OptionalAction doNothingAction = new OptionalAction("End Turn", "Skip this optional action",gameState.getTurnManager().getCurrentWorker(), TurnPhase.BUILD);
-        actions.setOptionalAction(doNothingAction);
+        if (actions.size() == 1) {
+            // means it only  move one time
+            buildActions.setOptionalAction(new OptionalAction("Extra Move", "", buildActions.getFirst().getTargetWorker(), TurnPhase.MOVE));
+        }
+        return buildActions;
+    }
 
+    @Override
+    public void afterBuild(Action buildAction, GameState gameState) {
+        actions.clear();
+        originalPosition = null;
+    }
 
-        return actions;
+    @Override
+    public void beforeOpponentMove(ActionList moveActions) {
+        actions.clear();
+        originalPosition = null;
+        super.beforeOpponentMove(moveActions);
     }
 }

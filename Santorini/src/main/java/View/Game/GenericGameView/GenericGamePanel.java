@@ -1,7 +1,7 @@
 package View.Game.GenericGameView;
 
-import View.Game.BasicGameView.ActivePlayerPanel;
-import View.Game.BasicGameView.PlayerSidePanel;
+import View.Game.BasicGameView.BlockPoolSidePanel;
+import View.Game.MapComponent.JBlock;
 import View.Game.MapComponent.JBoard;
 import View.Game.MapComponent.JPlayer;
 import View.SantoriniPanel;
@@ -9,6 +9,7 @@ import View.SantoriniPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,6 +20,7 @@ public abstract class GenericGamePanel<T extends GenericPlayerSidePanel> extends
     protected JButton quitButton;
 
     protected T playersPanel;
+    protected BlockPoolSidePanel blockPoolSidePanel;
     protected final JLayeredPane layeredPane;
 
     protected final List<JPlayer> players;
@@ -30,7 +32,7 @@ public abstract class GenericGamePanel<T extends GenericPlayerSidePanel> extends
      *
      * @param players The list of players in the game
      */
-    public GenericGamePanel(List<JPlayer> players, List<String> playerNames, List<String> playerGodCardsImgPaths, boolean[][] cellLayout) {
+    public GenericGamePanel(List<JPlayer> players, List<String> playerNames, List<String> playerGodCardsImgPaths, boolean[][] cellLayout, HashMap<JBlock, Integer> blockPool) {
         super(imgPath);
 
         gameBoard = new JBoard(cellLayout);
@@ -45,9 +47,6 @@ public abstract class GenericGamePanel<T extends GenericPlayerSidePanel> extends
         int height = getMaxHeight();
         layeredPane.setPreferredSize(new Dimension(width, height));
 
-        createGameBoard(width, height);
-        createPlayerPanels(playerNames, playerGodCardsImgPaths);
-        createQuitButton();
     }
 
     /**
@@ -57,16 +56,30 @@ public abstract class GenericGamePanel<T extends GenericPlayerSidePanel> extends
      * @param width The width of the game panel
      * @param height The height of the game panel
      */
-    private void createGameBoard(int width, int height) {
+    protected void createGameBoard(int width, int height) {
         int boardSize = (int) (getMaxWidth() * 0.42);
         gameBoard.setBounds((int) ((width - boardSize) / 1.99), (int) ((height - boardSize) / 2.2), boardSize, boardSize);
         gameBoard.setOpaque(false);
         layeredPane.add(gameBoard, JLayeredPane.DEFAULT_LAYER);
     }
 
+    protected abstract void createPlayerPanels(List<String> playerNames, List<String> playerGodCardsImgPaths);
 
-    public abstract void createPlayerPanels(List<String> playerNames, List<String> playerGodCardsImgPaths);
-    private void createQuitButton() {
+    protected void createBlockPoolPanel(HashMap<JBlock, Integer> blockPool){
+
+        int panelWidth = (int) (getMaxWidth() * 0.20);
+        int panelHeight = layeredPane.getPreferredSize().height;
+
+        this.blockPoolSidePanel = new BlockPoolSidePanel(blockPool, panelWidth, panelHeight);
+
+        // Position it on the right side
+        int x = layeredPane.getPreferredSize().width - panelWidth;
+        blockPoolSidePanel.setBounds(x, 0, panelWidth, panelHeight);
+
+        layeredPane.add(blockPoolSidePanel, JLayeredPane.PALETTE_LAYER);
+    }
+
+    protected void createQuitButton() {
         int width = (int)(getMaxWidth() * 0.05);
         int height = (int)(getMaxHeight() * 0.5);
 
@@ -139,5 +152,9 @@ public abstract class GenericGamePanel<T extends GenericPlayerSidePanel> extends
 
     public T getPlayersPanel() {
         return playersPanel;
+    }
+
+    public BlockPoolSidePanel getBlockPoolSidePanel() {
+        return blockPoolSidePanel;
     }
 }

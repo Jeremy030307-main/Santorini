@@ -4,14 +4,19 @@ import Controller.GameFlow.GameController;
 import Controller.GameFlow.GameDirector;
 import Model.Game.*;
 import Model.GodCard.GodCardFactory;
+import Model.Mode.GameMode;
 import Model.Player.Player;
 import Model.Player.WorkerColor;
 import View.SantoriniFrame;
 import View.Setup.ChooseGodPanel;
+import View.Setup.ChooseModePanel;
 import View.Setup.MiniGodCardButton;
 import View.Setup.SetupLobby;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,11 +27,14 @@ public class SetupController {
     private final SantoriniFrame santoriniFrame;
     private final SetupLobby setupLobby;
     private final ChooseGodPanel chooseGodPanel;
+    private final ChooseModePanel chooseModePanel;
+
 
     private Player[] players;
     private int[] playerSelectedGods;
     private boolean[] playerSelecting;
     private int currentPlayerIndex;
+    private GameMode currentGameMode;
 
     private boolean[][] layout;
 
@@ -36,7 +44,7 @@ public class SetupController {
 
         // creation of model object
         switch (gameMode) {
-            case TWO_PLAYER -> {
+            case CLASSIC -> {
 
                 players = new Player[2];
                 playerSelecting = new boolean[2]; playerSelecting[0] = false;playerSelecting[1] = false;
@@ -44,15 +52,6 @@ public class SetupController {
                 playerSelectedGods = new int[2];playerSelectedGods[0] = -1;playerSelectedGods[1] = -1;
                 players[0] = new Player(0, "Player 1", null, WorkerColor.ORANGE);
                 players[1] = new Player(1, "Player 2", null, WorkerColor.PURPLE);
-            }
-            case THREE_PLAYER -> {
-
-                players = new Player[3];
-                playerSelecting = new boolean[3]; playerSelecting[0] = false;playerSelecting[1] = false;playerSelecting[2] = false;
-                playerSelectedGods = new int[3];playerSelectedGods[0] = -1;playerSelectedGods[1] = -1;playerSelectedGods[2] = -1;
-                players[0] = new Player(0, "Player 1", null, WorkerColor.ORANGE);
-                players[1] = new Player(1, "Player 2", null, WorkerColor.PURPLE);
-                players[2] = new Player(2, "Player 3", null, WorkerColor.RED);
             }
 
             default -> throw new IllegalArgumentException("Unsupported mode: " + gameMode);
@@ -70,6 +69,19 @@ public class SetupController {
 
         setupLobby = new SetupLobby();
         chooseGodPanel = new ChooseGodPanel(allGods.stream().map(GodCardFactory::getName).collect(Collectors.toList()));
+
+        List<ActionListener> actionListeners = new ArrayList<>();
+        for (GameMode g: GameMode.getGameModes()){
+            actionListeners.add(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    currentGameMode = g;
+                    setupLobby.showView("chooseGodCard");
+                }
+            });
+        }
+
+        chooseModePanel = new ChooseModePanel(GameMode.getAllBtnImagePaths(), actionListeners);
         this.santoriniFrame = santoriniFrame;
 
         santoriniFrame.addView(setupLobby, SETUP_VIEW);
@@ -78,10 +90,10 @@ public class SetupController {
 
     public void setup(){
 
-        setupLobby.addCard(chooseGodPanel, "chooseGodCard");
+        setupLobby.addCard(chooseModePanel, "chooseMode");
+        setupLobby.showView("chooseMode");
 
-        // First phase of setup: God Selection
-        setupLobby.showView("chooseGodCard");
+        setupLobby.addCard(chooseGodPanel, "chooseGodCard");
 
         // player 1 should be the first to select the god card
         chooseGodPanel.getPlayerButtons().getFirst().setVisible(true);
@@ -91,7 +103,6 @@ public class SetupController {
         setupChooseGodCardButton();
         setupPlayerButton();
         setupConfirmButton();
-
     }
 
     public void start(){
@@ -152,7 +163,7 @@ public class SetupController {
                 players[i].setGodCard(allGods.get(playerSelectedGods[i]).getConstructor().get());
             }
 
-            GameController gameController = GameDirector.constructTimedGame(santoriniFrame, players, layout, new BlockPool());
+            GameController gameController = GameDirector.constructGame(currentGameMode, santoriniFrame, players, layout, new BlockPool());
             gameController.setupGame();
         });
     }

@@ -2,7 +2,6 @@ package Model.Game;
 
 import Model.Action.ActionList;
 import Model.Board.Board;
-import Model.Game.TurnManager.TurnManager;
 import Model.GameRule.ClassicGameRule;
 import Model.Player.Player;
 import Model.Player.Worker;

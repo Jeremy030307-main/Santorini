@@ -142,8 +142,10 @@ public class ActivePlayerPanel extends JPanel {
 
     public void setOptionalButton(String buttonText, ActionListener actionListener){
         actionButton.setText(buttonText);
+        for (ActionListener oldActionListener: actionButton.getActionListeners()){
+            actionButton.removeActionListener(oldActionListener);
+        }
         actionButton.addActionListener(actionListener);
-//        add(actionButton);
         actionButton.setVisible(true);
         revalidate();
         repaint();

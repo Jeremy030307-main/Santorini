@@ -3,6 +3,7 @@ package Controller.GameFlow;
 import Controller.HomeController;
 import Controller.SetupWorkerController;
 import Model.Board.Block;
+import Model.Board.BlockType;
 import Model.Board.Cell;
 import Model.Game.*;
 import View.Game.BasicGameView.GamePanel;
@@ -11,6 +12,7 @@ import View.Game.MapComponent.*;
 import View.SantoriniFrame;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class GameController {
@@ -24,6 +26,7 @@ public class GameController {
     private SetupWorkerController setupController;
     private TurnController turnController;
     private GameOverController gameOverController;
+    private Runnable optionalUpdatePanel;
 
     private int currentPlayerIndex;
 
@@ -58,6 +61,11 @@ public class GameController {
 
         public Builder setGameOverController(GameOverController gameOverController) {
             gameController.gameOverController = gameOverController;
+            return this;
+        }
+
+        public Builder setOptionalUpdatePanel(Runnable optionalUpdatePanel) {
+            gameController.optionalUpdatePanel = optionalUpdatePanel;
             return this;
         }
 
@@ -96,6 +104,7 @@ public class GameController {
             for (int col = 0; col < cells[row].length; col++) {
                 Cell cell = cells[row][col];
                 JCell displayCell = gamePanel.getGameBoard().getCell(row, col);
+                displayCell.activate();
 
                 displayCell.setWorker(cell.isOccupied() ? JWorker.from(cell.getOccupant().getWorkerColor().toString(), cell.getOccupant().getGender().toString()): null );
                 displayCell.setAction((JCellAction) null);
@@ -103,12 +112,22 @@ public class GameController {
                 List<JBlock> towerDisplay = new ArrayList<>();
                 for (Block block: cell.getTower()){
                     towerDisplay.add(JBlock.from(block.getLevel()));
-                }
+                };
                 displayCell.setBlocks(towerDisplay);
             }
         }
 
+        HashMap<JBlock, Integer> viewBlockPool = new HashMap<>();
+        for (BlockType blockType : BlockType.getValuesInAscendingOrder()) {
+            JBlock jblock = JBlock.from(blockType.getLevel());
+            viewBlockPool.put(jblock, gameState.getBlockPool().getRemaining(blockType));
+        }
+        gamePanel.getBlockPoolSidePanel().updateBlockPool(viewBlockPool);
+
         gamePanel.setActivePlayerID(currentPlayerIndex, actionLabelText, gameState.getTurnManager().getPhase()==TurnPhase.OPTIONAL_ACTION);
+        if (optionalUpdatePanel != null) {
+            optionalUpdatePanel.run();
+        }
         gamePanel.getGameBoard().update();
         gamePanel.validate();
         gamePanel.repaint();

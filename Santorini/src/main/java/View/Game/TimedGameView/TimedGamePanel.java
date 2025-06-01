@@ -2,10 +2,12 @@ package View.Game.TimedGameView;
 
 import View.Game.BasicGameView.ActivePlayerPanel;
 import View.Game.GenericGameView.GenericGamePanel;
+import View.Game.MapComponent.JBlock;
 import View.Game.MapComponent.JPlayer;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TimedGamePanel extends GenericGamePanel<TimedPlayerSidePanel> {
@@ -19,8 +21,12 @@ public class TimedGamePanel extends GenericGamePanel<TimedPlayerSidePanel> {
      * @param playerGodCardsImgPaths
      * @param cellLayout
      */
-    public TimedGamePanel(List<JPlayer> players, List<String> playerNames, List<String> playerGodCardsImgPaths, boolean[][] cellLayout) {
-        super(players, playerNames, playerGodCardsImgPaths, cellLayout);
+    public TimedGamePanel(List<JPlayer> players, List<String> playerNames, List<String> playerGodCardsImgPaths, boolean[][] cellLayout, HashMap<JBlock, Integer> blockPool) {
+        super(players, playerNames, playerGodCardsImgPaths, cellLayout, blockPool);
+        createGameBoard(getMaxWidth(), getMaxHeight());
+        createPlayerPanels(playerNames, playerGodCardsImgPaths);
+        createQuitButton();
+        createBlockPoolPanel(blockPool);
     }
 
     @Override

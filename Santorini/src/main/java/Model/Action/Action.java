@@ -17,7 +17,8 @@ import Model.Player.Worker;
 public abstract class Action {
 
     /** Indicates whether the action is currently active and should be available to the player. */
-    private boolean active = false;
+    private boolean active = true;
+    private String diabledText = "";
 
     /** The current turn phase when this action is valid (e.g., MOVE, BUILD). */
     private final TurnPhase currentPhase;
@@ -64,13 +65,19 @@ public abstract class Action {
      */
     public void activate() {
         active = true;
+        diabledText = "";
     }
 
     /**
      * Deactivates this action, making it unavailable for execution.
      */
-    public void deactivate() {
+    public void deactivate(String reason) {
         active = false;
+        diabledText = reason;
+    }
+
+    public String getDiabledText() {
+        return diabledText;
     }
 
     /**

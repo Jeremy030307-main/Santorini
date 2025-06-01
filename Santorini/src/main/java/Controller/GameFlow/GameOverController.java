@@ -21,7 +21,7 @@ public class GameOverController {
 
     public void showWinPanel(Player player) {
 
-        this.winPanel = new WinPanel(JPlayer.from(player.getWorkerColor().toString()), player.getName(), matchCardImage(player.getGodCard().getName()));
+        this.winPanel = new WinPanel(JPlayer.from(player.getWorkerColor().toString()), player.getName(), player.getGodCard().getName().getName());
         mainFrame.addView(winPanel,  GAME_OVER_VIEW);
         mainFrame.showView(GAME_OVER_VIEW);
 

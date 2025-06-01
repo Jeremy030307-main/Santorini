@@ -69,6 +69,13 @@ public class ClassicGameRule {
         return actions;
     }
 
+    public ActionList checkMoveList(ActionList actions){
+        return actions;
+    }
+
+    public ActionList checkBuildList(ActionList actions){
+        return actions;
+    }
     /**
      * Checks if the current player has won the game.
      * A win occurs if the player has a worker on level 3 or if the opponent has no workers placed on the board.
@@ -119,7 +126,6 @@ public class ClassicGameRule {
             }
 
             if (allStuck) {
-                System.out.println("All stuck");
                 player.setLose(true);
                 anyPlayerLost = true;
             }
