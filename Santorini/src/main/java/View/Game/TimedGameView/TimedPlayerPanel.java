@@ -41,7 +41,6 @@ public class TimedPlayerPanel extends ActivePlayerPanel {
             @Override
             public void run() {
                 SwingUtilities.invokeLater(() -> {
-                    System.out.println(formatTime(timeRemaining));
                     timeRemaining--;
                     if (timeRemaining >= 0) {
                         timerLabel.setText(formatTime(timeRemaining));

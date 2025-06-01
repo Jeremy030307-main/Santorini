@@ -6,10 +6,10 @@ import Model.Player.Player;
 
 public class TimedGameRule extends ClassicGameRule {
 
-    TimedTurnManager timedTurnManager;
+    TimerManager timerManager;
 
-    public TimedGameRule(TimedTurnManager timedTurnManager) {
-        this.timedTurnManager = timedTurnManager;
+    public TimedGameRule(TimerManager timerManager) {
+        this.timerManager = timerManager;
     }
 
     @Override
@@ -17,7 +17,7 @@ public class TimedGameRule extends ClassicGameRule {
         boolean oriCheckLose = super.checkLose(gameState);
 
         for (Player player : gameState.getPlayers()) {
-            if (!timedTurnManager.stillAlive(player)) {
+            if (!timerManager.stillAlive(player)) {
                 player.setLose(true);
             }
         }

@@ -5,7 +5,7 @@ public enum TurnPhase {
     /**
      * The phase where the turn starts and initial preparations are made.
      */
-    START_TURN(""),
+    START_TURN("Start Turn"),
 
     /**
      * The phase where the player selects a worker to perform actions.
@@ -35,12 +35,12 @@ public enum TurnPhase {
     /**
      * The phase where optional actions (if any) can be performed.
      */
-    OPTIONAL_ACTION("Optional Action"),
+    OPTIONAL_ACTION("Optional_Action"),
 
     /**
      * The phase where the turn ends and the game prepares for the next turn.
      */
-    END_TURN("");
+    END_TURN("END TURN");
 
     private final String phaseText;
 

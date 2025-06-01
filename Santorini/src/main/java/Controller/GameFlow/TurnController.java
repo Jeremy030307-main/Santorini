@@ -5,9 +5,8 @@ import Model.Action.ActionList;
 import Model.Action.OptionalAction;
 import Model.Board.Position;
 import Model.Game.GameState;
-import Model.Game.TurnManager.TurnManager;
+import Model.Game.TurnManager;
 import Model.Player.Worker;
-import View.Game.BasicGameView.GamePanel;
 import View.Game.GenericGameView.GenericGamePanel;
 import View.Game.MapComponent.JCell;
 import View.Game.MapComponent.JCellAction;
@@ -17,14 +16,14 @@ import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TurnController<T extends TurnManager> {
+public class TurnController {
 
     protected final TurnManager turnManager;
     protected final GenericGamePanel gamePanel;
     protected final GameController gameController;
     protected final Map<JCell, MouseListener> attachedListeners = new HashMap<>();
 
-    public TurnController(T turnManager, GenericGamePanel gamePanel, GameController gameController) {
+    public TurnController(TurnManager turnManager, GenericGamePanel gamePanel, GameController gameController) {
         this.turnManager = turnManager;
         this.gamePanel = gamePanel;
         this.gameController = gameController;
@@ -33,7 +32,6 @@ public class TurnController<T extends TurnManager> {
     public void processTurn(GameState gameState) {
 
         if (gameState.isGameOver()) {
-            System.out.println("Game Over");
             gameController.gameOver();  // handle over for game controller to control the game over
             return;
         }
@@ -78,6 +76,7 @@ public class TurnController<T extends TurnManager> {
                 }
                 break;
             case END_TURN:
+                System.out.println("End turn");
                 turnManager.onEndTurn();
                 processTurn(gameState);
                 break;
@@ -114,19 +113,25 @@ public class TurnController<T extends TurnManager> {
             JCell displayCell = gamePanel.getGameBoard().getCell(currPos.x(), currPos.y());
 
             displayCell.setAction(cellAction);
-            addListener(displayCell, new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    turnManager.handleAction(action, gameState);
-                    clearListeners();
-                    processTurn(gameState);
-                }
-            });
+
+            if (!action.isActive()){
+                displayCell.deactivate(action.getDiabledText());
+            } else {
+                displayCell.activate();
+                addListener(displayCell, new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        turnManager.handleAction(action, gameState);
+                        clearListeners();
+                        processTurn(gameState);
+                    }
+                });
+            }
         }
     }
 
     private void showOptionalButton(OptionalAction action, GameState gameState) {
-
+        System.out.println("Showing optional action");
         if (action != null) {
             ActionListener optionalButtonListener = new ActionListener() {
                 @Override

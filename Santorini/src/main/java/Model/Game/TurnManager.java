@@ -1,9 +1,7 @@
-package Model.Game.TurnManager;
+package Model.Game;
 
 import Model.Action.Action;
 import Model.Action.ActionList;
-import Model.Game.GameState;
-import Model.Game.TurnPhase;
 import Model.Player.Player;
 import Model.Player.Worker;
 
@@ -12,10 +10,10 @@ import java.util.List;
 
 public class TurnManager {
 
-    private final Player[] players;
-    private int currentPlayerIndex;
-    private Integer playerSelectedWorkerID;
-    private TurnPhase phase;
+    protected final Player[] players;
+    protected int currentPlayerIndex;
+    protected Integer playerSelectedWorkerID;
+    protected TurnPhase phase;
 
     public TurnManager(Player[] players) {
         this.players = players;
@@ -42,15 +40,19 @@ public class TurnManager {
         ActionList moveActions = gameState.getMovesAction(getCurrentPlayer().getWorkerByID(playerSelectedWorkerID));
 
         moveActions = getCurrentPlayer().getGodCard().beforeMove(moveActions);
-;        
-        return moveActions;
+
+        for (Player player : getOpponents(getCurrentPlayer())) {
+            player.getGodCard().beforeOpponentMove(moveActions);
+        }
+;
+        return gameState.getGameRule().checkMoveList(moveActions);
     };
 
     public ActionList getBuildActions(GameState gameState){
         ActionList buildActions = gameState.getBuildAction(getCurrentPlayer().getWorkerByID(playerSelectedWorkerID));
 
         buildActions = getCurrentPlayer().getGodCard().beforeBuild(buildActions);
-        return buildActions;
+        return gameState.getGameRule().checkBuildList(buildActions);
     };
 
     /**
@@ -60,7 +62,16 @@ public class TurnManager {
      * @param gameState The current game state to evaluate optional actions
      */
     public ActionList getOptionalActions(GameState gameState) {
-        return getCurrentPlayer().getGodCard().getOptionalActions(gameState, getCurrentWorker());  // last one is a do nothing action
+
+        ActionList optionalActions = getCurrentPlayer().getGodCard().getOptionalActions(gameState, getCurrentWorker());
+
+        if (optionalActions.getFirst().getCurrentPhase() == TurnPhase.MOVE){
+            return gameState.getGameRule().checkMoveList(optionalActions);
+        } else if (optionalActions.getFirst().getCurrentPhase() == TurnPhase.BUILD) {
+            return gameState.getGameRule().checkBuildList(optionalActions);
+        } else {
+            return optionalActions;
+        }
     }
 
     public void handleAction(Action action, GameState gameState){
@@ -85,6 +96,8 @@ public class TurnManager {
     }
 
     public void onEndTurn(){
+
+        System.out.println(currentPlayerIndex);
         currentPlayerIndex ++;
 
         if (currentPlayerIndex >= players.length) {
@@ -92,6 +105,7 @@ public class TurnManager {
         }
         playerSelectedWorkerID = null;
         phase = TurnPhase.START_TURN;
+        System.out.println(currentPlayerIndex);
     }
 
     // ==== Getter ====
